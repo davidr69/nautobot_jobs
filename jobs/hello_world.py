@@ -32,8 +32,12 @@ class HelloWorldJobs(Job):
 		choices = (get_device_types())
 	)
 
-	def run(self, *, who):
-		self.logger.info('Hello, %s!', who)
+	def run(self, *, who, age, comment, devices):
+		self.logger.info('Hello, %s! You are %s years old.', who, age)
+		if comment:
+			self.logger.info('Comment: %s', comment)
+		if devices:
+			self.logger.info('Selected device type IDs: %s', devices)
 
 
 class HelloWorldButtonReceiver(JobButtonReceiver):
