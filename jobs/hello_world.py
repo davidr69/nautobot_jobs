@@ -5,7 +5,7 @@ name = 'Examples'       # grouping in UI
 
 def get_device_types():
 	devices = DeviceType.objects.all()
-	return [(str(device.pk), str(device)) for device in devices]
+	return [(str(device.pk), str(device.manufacturer)) for device in devices]
 
 class HelloWorldJobs(Job):
 	class Meta:
