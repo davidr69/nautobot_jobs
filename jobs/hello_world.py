@@ -1,4 +1,4 @@
-from nautobot.apps.jobs import Job, StringVar, register_jobs, JobButtonReceiver
+from nautobot.apps.jobs import Job, StringVar, register_jobs, JobButtonReceiver, MultiChoiceVar, ObjectVar, TextVar, IntegerVar
 
 name = 'Examples'       # grouping in UI
 
@@ -10,6 +10,16 @@ class HelloWorldJobs(Job):
 	who = StringVar(
 		description = 'Identify yourself!',
 		default = 'hola!'
+	)
+
+	age = IntegerVar(
+		description = 'Your age',
+		default = 30
+	)
+
+	comment = TextVar(
+		description = 'Any comments?',
+		default = 'No comments'
 	)
 
 	def run(self, *, who):
