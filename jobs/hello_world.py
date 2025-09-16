@@ -3,9 +3,9 @@ from nautobot.dcim.models.devices import DeviceType
 
 name = 'Examples'       # grouping in UI
 
-def get_device_types():
-	devices = DeviceType.objects.all()
-	return [(str(device.pk), str(device.manufacturer)) for device in devices]
+# def get_device_types():
+# 	devices = DeviceType.objects.all()
+# 	return [(str(device.pk), str(device.manufacturer)) for device in devices]
 
 class HelloWorldJobs(Job):
 	class Meta:
@@ -27,9 +27,14 @@ class HelloWorldJobs(Job):
 		default = 'No comments'
 	)
 
-	devices = MultiChoiceVar(
+	# devices = MultiChoiceVar(
+	# 	description = 'Select device type(s)',
+	# 	choices = (get_device_types())
+	# )
+	devices = ObjectVar(
+		model = DeviceType,
 		description = 'Select device type(s)',
-		choices = (get_device_types())
+		multiple = True
 	)
 
 	def run(self, *, who, age, comment, devices):
