@@ -3,6 +3,10 @@ from nautobot.dcim.models.devices import DeviceType
 
 name = 'Examples'       # grouping in UI
 
+def get_device_types():
+	devices = DeviceType.objects.all()
+	return [(str(device.pk), str(device)) for device in devices]
+
 class HelloWorldJobs(Job):
 	class Meta:
 		name = 'Hello World'    # job name
@@ -25,16 +29,11 @@ class HelloWorldJobs(Job):
 
 	devices = MultiChoiceVar(
 		description = 'Select device type(s)',
-		choices = (self.GetDeviceTypes())
+		choices = (get_device_types())
 	)
 
 	def run(self, *, who):
 		self.logger.info('Hello, %s!', who)
-
-
-	def GetDeviceTypes(self):
-		devices = DeviceType.objects.all()
-		return [(str(device.pk), str(device)) for device in devices]
 
 
 class HelloWorldButtonReceiver(JobButtonReceiver):
