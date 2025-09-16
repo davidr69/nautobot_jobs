@@ -23,17 +23,18 @@ class HelloWorldJobs(Job):
 		default = 'No comments'
 	)
 
-	def __init__(self):
-		devices = DeviceType.objects.all()
-		dev_types = [(str(device.pk), str(device)) for device in devices]
-
-		self.food = MultiChoiceVar(
-			description = 'Select device type(s)',
-			choices = dev_types
-		)
+	devices = MultiChoiceVar(
+		description = 'Select device type(s)',
+		choices = (self.GetDeviceTypes())
+	)
 
 	def run(self, *, who):
 		self.logger.info('Hello, %s!', who)
+
+
+	def GetDeviceTypes(self):
+		devices = DeviceType.objects.all()
+		return [(str(device.pk), str(device)) for device in devices]
 
 
 class HelloWorldButtonReceiver(JobButtonReceiver):
