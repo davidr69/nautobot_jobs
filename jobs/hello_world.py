@@ -1,12 +1,13 @@
-from nautobot.apps import jobs
+from nautobot.apps.jobs import Job, StringVar, register_jobs, JobButtonReceiver
 
 name = 'Examples'       # grouping in UI
 
-class HelloWorldJobs(jobs.Job):
+class HelloWorldJobs(Job):
 	class Meta:
 		name = 'Hello World'    # job name
+		description = 'Update this description'
 
-	who = jobs.StringVar(
+	who = StringVar(
 		description = 'Identify yourself!',
 		default = 'hola!'
 	)
@@ -14,4 +15,14 @@ class HelloWorldJobs(jobs.Job):
 	def run(self, *, who):
 		self.logger.info('Hello, %s!', who)
 
-jobs.register_jobs(HelloWorldJobs)
+
+class HelloWorldButtonReceiver(JobButtonReceiver):
+	class Meta:
+		name = 'Hello World Button Receiver'
+		description = 'A Job Button Receiver example'
+
+	def run(self, context):
+		self.log_info("Hello from the Job Button Receiver!")
+		self.log_info(f"Context: {context}")
+
+register_jobs(HelloWorldJobs, HelloWorldButtonReceiver)
