@@ -1,4 +1,5 @@
 from nautobot.apps.jobs import Job, StringVar, register_jobs, JobButtonReceiver, MultiChoiceVar, ObjectVar, TextVar, IntegerVar
+from nautobot.dcim.models.devices import DeviceType
 
 name = 'Examples'       # grouping in UI
 
@@ -22,14 +23,14 @@ class HelloWorldJobs(Job):
 		default = 'No comments'
 	)
 
-	food = MultiChoiceVar(
-		description = 'Select your favorite foods',
-		choices = ([
-			('pizza', 'Pizza'),
-			('tacos', 'Tacos'),
-			('salmon', 'Salmon')
-		])
-	)
+	def __init__(self):
+		devices = DeviceType.objects.all()
+		dev_types = [(str(device.pk), str(device)) for device in devices]
+
+		self.food = MultiChoiceVar(
+			description = 'Select device type(s)',
+			choices = dev_types
+		)
 
 	def run(self, *, who):
 		self.logger.info('Hello, %s!', who)
