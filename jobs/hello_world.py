@@ -33,8 +33,7 @@ class HelloWorldJobs(Job):
 	# )
 	devices = ObjectVar(
 		model = DeviceType,
-		description = 'Select device type(s)',
-		multiple = True
+		description = 'Select device type(s)'
 	)
 
 	def run(self, *, who, age, comment, devices):
