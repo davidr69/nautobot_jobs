@@ -22,6 +22,15 @@ class HelloWorldJobs(Job):
 		default = 'No comments'
 	)
 
+	food = MultiChoiceVar(
+		description = 'Select your favorite foods',
+		choices = ([
+			('pizza', 'Pizza'),
+			('tacos', 'Tacos'),
+			('salmon', 'Salmon')
+		])
+	)
+
 	def run(self, *, who):
 		self.logger.info('Hello, %s!', who)
 
