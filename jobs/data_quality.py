@@ -7,7 +7,12 @@ name = "Data Quality Jobs Collection"
 
 class VerifyPlatform(Job):
 
-	location_to_check = ObjectVar(model=Location)
+	location_to_check = ObjectVar(
+		model=Location,
+		query_params = {
+			"has_devices": True
+		}
+	)
 
 	class Meta:
 		name = "Check Platform is defined"
