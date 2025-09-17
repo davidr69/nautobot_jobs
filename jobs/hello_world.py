@@ -11,6 +11,7 @@ class HelloWorldJobs(Job):
 	class Meta:
 		name = 'Hello World'    # job name
 		description = 'Update this description'
+		has_sensitive_variables = False
 
 	who = StringVar(
 		description = 'Identify yourself!',
