@@ -5,7 +5,7 @@ from nautobot.dcim.models.locations import Location
 from nautobot.dcim.models.devices import Device
 
 name = "Data Quality Jobs Collection"
-HOSTNAME_PATTERN = re.compile(r"[a-z0-1]+\-[a-z]+\-\d+\.infra\.valuemart\.com")
+HOSTNAME_PATTERN = re.compile(r"[a-z0-1]+\-[a-z]+\-\d+\.lavacro\.net")
 
 
 class VerifyPlatform(Job):
