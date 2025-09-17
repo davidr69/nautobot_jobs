@@ -1,8 +1,11 @@
+import re
+
 from nautobot.apps.jobs import MultiChoiceVar, Job, ObjectVar, register_jobs, StringVar, IntegerVar
 from nautobot.dcim.models.locations import Location
 from nautobot.dcim.models.devices import Device
 
 name = "Data Quality Jobs Collection"
+HOSTNAME_PATTERN = re.compile(r"[a-z0-1]+\-[a-z]+\-\d+\.infra\.valuemart\.com")
 
 
 class VerifyPlatform(Job):
@@ -118,8 +121,42 @@ class VerifyPrimaryIP(Job):
 				)
 
 
+class VerifyHostname(Job):
+	location_to_check = ObjectVar(
+		model=Location,
+		query_params={
+			"has_devices": True,
+		}
+	)
+
+	class Meta:
+
+		name = "Verify Hostname Pattern For Selected Locations"
+		description = "Checks all devices at Designated Location for hostname pattern conformation"
+
+	def run(self, location_to_check):
+		"""Run method for executing the checks on the devices."""
+
+		# Iterate through each Device object, limited to just the location of choice.
+		for device in Device.objects.filter(location=location_to_check):
+			hostname = device.name
+			self.logger.info(
+				f"Checking device hostname compliance: {hostname}",
+				extra={"object": device},
+			)
+			# Check if the hostname matches the expected pattern
+			if HOSTNAME_PATTERN.match(hostname):
+				self.logger.info(f"{hostname} configured hostname is correct.")
+				# Skip to next iteration of the list
+				continue
+
+			# Mark the Device as failed in the job results
+			self.logger.error(f"{hostname} does Not Match Hostname Pattern.")
+
+
 register_jobs(
 	VerifySerialNumber,
 	VerifyPrimaryIP,
-	VerifyPlatform
+	VerifyPlatform,
+	VerifyHostname
 )
