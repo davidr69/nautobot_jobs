@@ -146,7 +146,83 @@ class ChangeVLAN(Job):
         )
 
 
+class ChangeVLAN_by_Function(Job):
+    device_location = ObjectVar(model=Location, required=False)
+
+    device = ObjectVar(
+        model=Device,
+        query_params={
+            "location": "$device_location",
+        },
+    )
+
+    interface = ObjectVar(
+        model=Interface,
+        query_params={
+            "device_id": "$device",
+            "name__ic": "Ethernet"
+        }
+    )
+
+    vlan = ObjectVar(
+        model=VLAN,
+    )
+
+
+    class Meta:
+        name = "Change VLAN on Port by existing VLAN"
+        description = "Change VLAN on Port by existing VLAN."
+
+    def run(self, device_location, device, interface, vlan):
+        """Run method for executing the checks on the device."""
+        self.logger.info(f"Device: {device.name}, Interface: {interface}")
+
+        # Verify that the device has a primary IP
+        if device.primary_ip is None:
+            self.logger.fatal("Device does not have a primary IP address set.")
+            return
+
+        # Verify that the device has a platform associated
+        if device.platform is None:
+            self.logger.fatal("Device does not have a platform set.")
+            return
+
+        # check for device driver association
+        if device.platform.network_driver_mappings.get("netmiko") is None:
+            self.logger.fatal("Device mapping for Netmiko is not present, please set.")
+            return
+
+        # Connect to the device, get some output - comment this out if you are simulating
+        net_connect = ConnectHandler(
+            device_type=device.platform.network_driver_mappings["netmiko"],
+            host=device.primary_ip.host,  # or device.name if your name is an FQDN
+            username="admin",
+            password="admin",
+        )
+
+        # Easy mapping of platform to device command
+        COMMAND_MAP = {
+            "cisco_nxos": [f"interface {interface}", f"switchport access vlan {vlan.vid}"],
+            "arista_eos": [f"interface {interface}", f"switchport access vlan {vlan.vid}"],
+        }
+
+        commands = COMMAND_MAP[device.platform.network_driver_mappings.get("netmiko")]
+        self.logger.info(f"This is the command: {commands}")
+        # output = net_connect.send_command(commands)
+        net_connect.enable()
+        output = net_connect.send_config_set(commands)
+        net_connect.save_config()
+        net_connect.disconnect()
+        self.logger.info(f"This is the output: {output}")
+
+        # If an excpetion is not raise the configuration was implemented successfully
+        self.logger.info(
+            interface, f"Successfully added VLAN {vlan.name} to {interface.name} on {device.name}!"
+        )
+
+
 register_jobs(
+    ChangeVLAN,
+    ChangeVLAN_by_Function,
     CommandRunner,
-    ChangeVLAN
 )
