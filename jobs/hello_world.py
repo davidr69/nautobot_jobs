@@ -54,4 +54,17 @@ class HelloWorldButtonReceiver(JobButtonReceiver):
 		self.log_info("Hello from the Job Button Receiver!")
 		self.log_info(f"Context: {context}")
 
-register_jobs(HelloWorldJobs, HelloWorldButtonReceiver)
+
+...
+
+class HelloJobsWithApproval(Job):
+
+	class Meta:
+		name = "Hello World with Approval Required"
+		approval_required = True
+		has_sensitive_variables = False
+
+	def run(self):
+		self.logger.debug("Hello, this is my first Nautobot Job that requires approval.")
+
+register_jobs(HelloWorldJobs, HelloWorldButtonReceiver, HelloJobsWithApproval)
