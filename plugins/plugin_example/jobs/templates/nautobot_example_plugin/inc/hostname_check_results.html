@@ -1,0 +1,76 @@
+{% load custom_links %}
+
+{% if result.result.results %}
+<h1>Hostname Check Results Table</h1>
+<!-- Added container with id "hostname-check" -->
+<div id="hostname-check">
+	<table class="table table-hover">
+		<thead>
+		<tr>
+			<th>Hostname</th>
+			<th>Status</th>
+		</tr>
+		</thead>
+		<tbody>
+		{% for item in result.result.results %}
+		<tr>
+			<td>
+				<a href="/dcim/devices/{{ item.device_id }}/?tab=main">
+					{{ item.hostname }}
+				</a>
+			</td>
+			<td>
+				{% if item.status == "PASS" %}
+				<span class="label label-success">{{ item.status }}</span>
+				{% else %}
+				<span class="label label-danger">{{ item.status }}</span>
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+</div>
+<button id="export-results" class="btn btn-primary">Export Results</button>
+{% endif %}
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		document.getElementById('export-results').addEventListener('click', function() {
+			// Now that the table is wrapped in #hostname-check, this selector works.
+			const table = document.querySelector('#hostname-check table');
+			if (!table) {
+				console.error("Table not found!");
+				return;
+			}
+			const rows = table.querySelectorAll('tr');
+
+			const csv = [];
+			for (let i = 0; i < rows.length; i++) {
+				const row = [], cols = rows[i].querySelectorAll('td, th');
+
+				for (let j = 0; j < cols.length; j++) {
+					// Clean up cell content for CSV
+					let data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+					// Escape quotes
+					data = data.replace(/"/g, '""');
+					// Add quotes if necessary
+					if (data.search(/("|,|\n)/g) >= 0) data = '"' + data + '"';
+					row.push(data);
+				}
+				csv.push(row.join(','));
+			}
+
+			// Download
+			const csvString = csv.join('\n');
+			let a = document.createElement('a');
+			// Using the correct MIME type for CSV
+			a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvString);
+			a.target = '_blank';
+			a.download = 'hostname_check_results.csv';
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		});
+	});
+</script>
