@@ -29,7 +29,7 @@ class PrefixLoader(Job):
 		for prefix in fake_data:
 			self.logger.info(f"Would create prefix {prefix} for tenant {tenant}")
 			pf = Prefix(
-				prefix = prefix,
+				description = f'parent = {prefix}',
 				status = status,
 				namespace = namespace,
 				tenant = tenant,
