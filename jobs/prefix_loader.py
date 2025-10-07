@@ -20,6 +20,7 @@ class PrefixLoader(Job):
 	class Meta:
 		name = "Prefix Loader"
 		description = "Load prefixes from a predefined list"
+		has_sensitive_variables = False
 
 	def run(self, parent, tenant):
 		fake_data = ['10.0.10.0/24', '10.0.20.0/24', '10.0.30.0/24']
