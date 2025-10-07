@@ -1,15 +1,19 @@
 from nautobot.apps.jobs import Job, register_jobs, ObjectVar
 from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import Prefix, Namespace
-from nautobot.ipam.choices import PrefixTypeChoices
 from nautobot.extras.models.statuses import Status
+from nautobot.ipam.choices import PrefixTypeChoices
 
 name = 'IPAM stuff'
 
 class PrefixLoader(Job):
+	parent = ObjectVar(
+		model = Prefix,
+		label = "Parent Prefix"
+	)
+
 	tenant = ObjectVar(
 		model = Tenant,
-		query_params = {"has_prefixes": True},
 		required = True
 	)
 
@@ -29,7 +33,7 @@ class PrefixLoader(Job):
 				status = status,
 				namespace = namespace,
 				tenant = tenant,
-				type = PrefixTypeChoices.TYPE_NETWORK,
+				type = PrefixTypeChoices.TYPE_NETWORK
 			)
 			pf.save()
 
