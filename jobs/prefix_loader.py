@@ -21,7 +21,7 @@ class PrefixLoader(Job):
 		name = "Prefix Loader"
 		description = "Load prefixes from a predefined list"
 
-	def run(self, tenant):
+	def run(self, parent, tenant):
 		fake_data = ['10.0.10.0/24', '10.0.20.0/24', '10.0.30.0/24']
 		status = Status.objects.get(name = "Active")
 		namespace = Namespace.objects.get(name = "Global")
@@ -29,6 +29,7 @@ class PrefixLoader(Job):
 		for prefix in fake_data:
 			self.logger.info(f"Would create prefix {prefix} for tenant {tenant}")
 			pf = Prefix(
+				parent = parent,
 				description = f'parent = {prefix}',
 				status = status,
 				namespace = namespace,
