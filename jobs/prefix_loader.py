@@ -28,16 +28,21 @@ class PrefixLoader(Job):
 		namespace = Namespace.objects.get(name = "Global")
 
 		for prefix in fake_data:
-			self.logger.info(f"Would create prefix {prefix} for tenant {tenant}")
-			pf = Prefix(
+			self.logger.info(f"Can I create prefix {prefix} for tenant {tenant}?")
+			pf, created = Prefix.objects.get_or_create(
 				prefix = prefix,
 				parent = parent,
-				description = f'parent = {parent}',
-				status = status,
 				namespace = namespace,
 				tenant = tenant,
-				type = PrefixTypeChoices.TYPE_NETWORK
+				defaults = {
+					'description' : f'parent = {parent}',
+					'status' : status,
+					'type' : PrefixTypeChoices.TYPE_NETWORK
+				}
 			)
-			pf.save()
+			if created:
+				self.logger.info(f"Created prefix {prefix}")
+			else:
+				self.logger.info(f"Prefix {prefix} already exists, skipping")
 
 register_jobs(PrefixLoader)
