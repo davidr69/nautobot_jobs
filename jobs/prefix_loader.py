@@ -9,11 +9,13 @@ name = 'IPAM stuff'
 class PrefixLoader(Job):
 	parent = ObjectVar(
 		model = Prefix,
-		label = "Parent Prefix"
+		label = "Parent Prefix",
+		required = True
 	)
 
 	tenant = ObjectVar(
 		model = Tenant,
+		label = 'Select a tenant',
 		required = True
 	)
 
