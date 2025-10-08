@@ -1,3 +1,3 @@
-from .main import PrefixLoaderJob
+from .main import PrefixLoader
 
-__all__ = ["PrefixLoaderJob"]
+__all__ = ["PrefixLoader"]
