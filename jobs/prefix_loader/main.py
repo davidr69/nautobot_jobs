@@ -3,6 +3,7 @@ from nautobot.tenancy.models import Tenant
 from nautobot.ipam.models import Prefix, Namespace
 from nautobot.extras.models.statuses import Status
 from nautobot.ipam.choices import PrefixTypeChoices
+from nautobot.extras.models.secrets import SecretsGroup
 
 name = 'IPAM stuff'
 
@@ -46,5 +47,11 @@ class PrefixLoader(Job):
 				self.logger.info(f"Created prefix {prefix}")
 			else:
 				self.logger.info(f"Prefix {prefix} already exists, skipping")
+
+		group = SecretsGroup.objects.get(name = 'container labs ssh')
+		user = group.get_secret_value(secret_type='username', access_type='Generic')
+		pwd = group.get_secret_value(secret_type='password', access_type='Generic')
+
+		self.logger.info(f"Username from secrets group: {user}, password: {pwd}")
 
 register_jobs(PrefixLoader)
