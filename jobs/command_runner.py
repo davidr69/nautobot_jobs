@@ -9,7 +9,7 @@ from netmiko import ConnectHandler
 from nautobot.ipam.models import VLAN
 from nautobot.apps.jobs import JobButtonReceiver
 
-
+foo = 'bar'
 name = "Network Operations"
 
 
@@ -220,6 +220,10 @@ class ChangeVLAN_by_Function(Job):
             interface, f"Successfully added VLAN {vlan.name} to {interface.name} on {device.name}!"
         )
 
+
+class NotAJob:
+    def __init__(self):
+        print("This is not a job")
 
 register_jobs(
     ChangeVLAN,
