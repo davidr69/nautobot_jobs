@@ -1,7 +1,14 @@
 import os
 
 from django.conf import settings
-from nautobot.apps.jobs import MultiChoiceVar, Job, ObjectVar, register_jobs, StringVar, IntegerVar
+from nautobot.apps.jobs import (
+    MultiChoiceVar,
+    Job,
+    ObjectVar,
+    register_jobs,
+    StringVar,
+    IntegerVar,
+)
 from nautobot.dcim.models.locations import Location
 from nautobot.dcim.models.devices import Device
 from nautobot.dcim.models.device_components import Interface
@@ -9,7 +16,7 @@ from netmiko import ConnectHandler
 from nautobot.ipam.models import VLAN
 from nautobot.apps.jobs import JobButtonReceiver
 
-foo = 'bar'
+foo = "bar"
 name = "Network Operations"
 
 
@@ -47,7 +54,7 @@ class CommandRunner(Job):
             self.logger.fatal("Device does not have a primary IP address set.")
             return
 
-        # Verify that the device has a platform associated 
+        # Verify that the device has a platform associated
         if device.platform is None:
             self.logger.fatal("Device does not have a platform set.")
             return
@@ -67,9 +74,7 @@ class CommandRunner(Job):
             password="admin",
         )
         for command in commands:
-            output = net_connect.send_command(
-                command
-            )
+            output = net_connect.send_command(command)
             self.create_file(f"{device.name}-{command}.txt", output)
 
 
@@ -84,11 +89,7 @@ class ChangeVLAN(Job):
     )
 
     interface = ObjectVar(
-        model=Interface,
-        query_params={
-            "device_id": "$device",
-            "name__ic": "Ethernet"
-        }
+        model=Interface, query_params={"device_id": "$device", "name__ic": "Ethernet"}
     )
 
     # Specify a job input VLAN to be implemented
@@ -107,7 +108,7 @@ class ChangeVLAN(Job):
             self.logger.fatal("Device does not have a primary IP address set.")
             return
 
-        # Verify that the device has a platform associated 
+        # Verify that the device has a platform associated
         if device.platform is None:
             self.logger.fatal("Device does not have a platform set.")
             return
@@ -157,17 +158,12 @@ class ChangeVLAN_by_Function(Job):
     )
 
     interface = ObjectVar(
-        model=Interface,
-        query_params={
-            "device_id": "$device",
-            "name__ic": "Ethernet"
-        }
+        model=Interface, query_params={"device_id": "$device", "name__ic": "Ethernet"}
     )
 
     vlan = ObjectVar(
         model=VLAN,
     )
-
 
     class Meta:
         name = "Change VLAN on Port by existing VLAN"
@@ -202,8 +198,14 @@ class ChangeVLAN_by_Function(Job):
 
         # Easy mapping of platform to device command
         COMMAND_MAP = {
-            "cisco_nxos": [f"interface {interface}", f"switchport access vlan {vlan.vid}"],
-            "arista_eos": [f"interface {interface}", f"switchport access vlan {vlan.vid}"],
+            "cisco_nxos": [
+                f"interface {interface}",
+                f"switchport access vlan {vlan.vid}",
+            ],
+            "arista_eos": [
+                f"interface {interface}",
+                f"switchport access vlan {vlan.vid}",
+            ],
         }
 
         commands = COMMAND_MAP[device.platform.network_driver_mappings.get("netmiko")]
@@ -217,13 +219,15 @@ class ChangeVLAN_by_Function(Job):
 
         # If an excpetion is not raise the configuration was implemented successfully
         self.logger.info(
-            interface, f"Successfully added VLAN {vlan.name} to {interface.name} on {device.name}!"
+            interface,
+            f"Successfully added VLAN {vlan.name} to {interface.name} on {device.name}!",
         )
 
 
 class NotAJob:
     def __init__(self):
         print("This is not a job")
+
 
 register_jobs(
     ChangeVLAN,
