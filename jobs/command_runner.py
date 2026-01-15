@@ -16,7 +16,7 @@ from netmiko import ConnectHandler
 from nautobot.ipam.models import VLAN
 from nautobot.apps.jobs import JobButtonReceiver
 
-foo = "bar"
+
 name = "Network Operations"
 
 
@@ -46,7 +46,7 @@ class CommandRunner(Job):
         has_sensitive_variables = False
         description = "Command Runner"
 
-    def run(self, device_location, device, commands):
+    def run(self, device, commands):
         self.logger.info("Device name: %s", device.name)
 
         # Verify that the device has a primary IP
@@ -99,7 +99,7 @@ class ChangeVLAN(Job):
         name = "Change VLAN for Port"
         description = "Change VLAN based on Selected Port."
 
-    def run(self, device_location, device, interface, vlan):
+    def run(self, device, interface, vlan):
         """Run method for executing the checks on the device."""
         self.logger.info(f"Device: {device.name}, Interface: {interface}")
 
@@ -129,25 +129,25 @@ class ChangeVLAN(Job):
         # Easy mapping of platform to device command
         COMMAND_MAP = {
             "cisco_nxos": [f"interface {interface}", f"switchport access vlan {vlan}"],
-            "arista_eos": [f"interface {interface}", f"switchport access vlan {vlan}"],
+            "arista_eos": [f"interface {interface}", f"switchport access vlan {vlan}"]
         }
 
         commands = COMMAND_MAP[device.platform.network_driver_mappings.get("netmiko")]
         self.logger.info(f"This is the command: {commands}")
-        # output = net_connect.send_command(commands)
+
         net_connect.enable()
         output = net_connect.send_config_set(commands)
         net_connect.save_config()
         net_connect.disconnect()
         self.logger.info(f"This is the output: {output}")
 
-        # If an excpetion is not raise the configuration was implemented successfully
+        # If an exception is not raise the configuration was implemented successfully
         self.logger.info(
             interface, f"Successfully added to {interface.name} on {device.name}!"
         )
 
 
-class ChangeVLAN_by_Function(Job):
+class ChangeVlanByFunction(Job):
     device_location = ObjectVar(model=Location, required=False)
 
     device = ObjectVar(
@@ -161,15 +161,13 @@ class ChangeVLAN_by_Function(Job):
         model=Interface, query_params={"device_id": "$device", "name__ic": "Ethernet"}
     )
 
-    vlan = ObjectVar(
-        model=VLAN,
-    )
+    vlan = ObjectVar(model=VLAN)
 
     class Meta:
         name = "Change VLAN on Port by existing VLAN"
         description = "Change VLAN on Port by existing VLAN."
 
-    def run(self, device_location, device, interface, vlan):
+    def run(self, device, interface, vlan):
         """Run method for executing the checks on the device."""
         self.logger.info(f"Device: {device.name}, Interface: {interface}")
 
@@ -210,7 +208,7 @@ class ChangeVLAN_by_Function(Job):
 
         commands = COMMAND_MAP[device.platform.network_driver_mappings.get("netmiko")]
         self.logger.info(f"This is the command: {commands}")
-        # output = net_connect.send_command(commands)
+
         net_connect.enable()
         output = net_connect.send_config_set(commands)
         net_connect.save_config()
@@ -231,6 +229,6 @@ class NotAJob:
 
 register_jobs(
     ChangeVLAN,
-    ChangeVLAN_by_Function,
-    CommandRunner,
+    ChangeVlanByFunction,
+    CommandRunner
 )

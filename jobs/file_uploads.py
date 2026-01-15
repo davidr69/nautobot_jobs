@@ -16,12 +16,12 @@ class FileUpload(Job):
     def run(self, file):
         contents = str(file.read())
         self.logger.info(f"File contents: {contents}")
-        self.logger.info(f"Job didn't crash!")
+        self.logger.info("Job didn't crash!")
 
         return "Great job!"
 
 
-class FileUpload_2(Job):
+class FileUpload2(Job):
     class Meta:
         name = "CSV File Upload and Process"
         description = "Please select a CSV file for upload"
@@ -63,4 +63,4 @@ class FileUpload_2(Job):
         return "Execution completed"
 
 
-register_jobs(FileUpload, FileUpload_2)
+register_jobs(FileUpload, FileUpload2)

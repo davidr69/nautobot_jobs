@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+disable=E0401, # Unable to import
+    C0114, # Missing module docstring
+    C0115, # Missing class docstring
+    C0116, # Missing function or method docstring
+    R0903, # Too few public methods
+    C0103  # Constant name doesn't conform to UPPER_CASE (invalid-name)

@@ -3,7 +3,7 @@ from nautobot.apps.jobs import (
     StringVar,
     register_jobs,
     JobButtonReceiver,
-    MultiChoiceVar,
+#    MultiChoiceVar,
     ObjectVar,
     TextVar,
     IntegerVar,
@@ -11,10 +11,6 @@ from nautobot.apps.jobs import (
 from nautobot.dcim.models.devices import DeviceType
 
 name = "Examples"  # grouping in UI
-
-# def get_device_types():
-# 	devices = DeviceType.objects.all()
-# 	return [(str(device.pk), str(device.manufacturer)) for device in devices]
 
 
 class HelloWorldJobs(Job):
