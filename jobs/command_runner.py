@@ -1,20 +1,15 @@
-import os
-
-from django.conf import settings
 from nautobot.apps.jobs import (
     MultiChoiceVar,
     Job,
     ObjectVar,
     register_jobs,
-    StringVar,
-    IntegerVar,
+    IntegerVar
 )
+from nautobot.ipam.models import VLAN
 from nautobot.dcim.models.locations import Location
 from nautobot.dcim.models.devices import Device
 from nautobot.dcim.models.device_components import Interface
 from netmiko import ConnectHandler
-from nautobot.ipam.models import VLAN
-from nautobot.apps.jobs import JobButtonReceiver
 
 
 name = "Network Operations"
