@@ -10,7 +10,7 @@ class FileUpload(Job):
         name = "CSV File Upload"
         description = "Please select a CSV file for upload"
         has_sensitive_variables = False
-        is_singleton = False
+        is_singleton = True
         soft_time_limit = 60
         time_limit = 300
 
@@ -28,7 +28,7 @@ class FileUpload2(Job):
     class Meta:
         name = "CSV File Upload and Process"
         description = "Please select a CSV file for upload"
-        is_singleton = False
+        is_singleton = True
         soft_time_limit = 60
         time_limit = 300
 
