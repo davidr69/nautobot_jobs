@@ -1,4 +1,4 @@
-from nautobot.apps.jobs import Job, register_jobs, JobHookReceiver
+from nautobot.apps.jobs import register_jobs, JobHookReceiver
 import requests
 
 name = "Job Hook Receivers"
@@ -9,7 +9,7 @@ class HelloWorldJobHook(JobHookReceiver):
     class Meta:
         name = "This is my first Job Hook Receiver"
 
-    def receive_job_hook(self, change, action, changed_object):
+    def receive_job_hook(self, changed_object):
         self.logger.info(
             "Launching Job Hook Receiver.", extra={"object": changed_object}
         )

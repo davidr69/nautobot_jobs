@@ -1,12 +1,9 @@
 import re
 
 from nautobot.apps.jobs import (
-    MultiChoiceVar,
     Job,
     ObjectVar,
-    register_jobs,
-    StringVar,
-    IntegerVar,
+    register_jobs
 )
 from nautobot.dcim.models.locations import Location
 from nautobot.dcim.models.devices import Device
@@ -39,13 +36,12 @@ class VerifyPlatform(Job):
                 self.logger.fatal(f"{device} does not have platform set.")
                 return
 
-            else:
-                self.logger.debug(
-                    "Device %s is of the platform: %s",
-                    device.name,
-                    device.platform,
-                    extra={"object": device},
-                )
+            self.logger.debug(
+                "Device %s is of the platform: %s",
+                device.name,
+                device.platform,
+                extra={"object": device},
+            )
 
 
 class VerifySerialNumber(Job):
@@ -115,8 +111,6 @@ class VerifyPrimaryIP(Job):
                 self.logger.fatal(
                     f"{device} does not have a primary IP address configured."
                 )
-                return
-
             else:
                 self.logger.debug(
                     "Device %s has primary IP: %s",
@@ -141,7 +135,7 @@ class VerifyHostname(Job):
 
     def run(self, location_to_check):
         """Run method for executing the checks on the devices."""
-        esults = []
+        results = []
 
         # Iterate through each Device object, limited to just the location of choice.
         for device in Device.objects.filter(location=location_to_check):

@@ -1,4 +1,4 @@
-from nautobot.apps.jobs import Job, register_jobs, JobButtonReceiver
+from nautobot.apps.jobs import register_jobs, JobButtonReceiver
 from netmiko import ConnectHandler
 
 name = "Job Button Receivers"
@@ -36,11 +36,11 @@ class PortBouncerButton(JobButtonReceiver):
 
         # Easy mapping of platform to device command
         COMMAND_MAP = {
-            "cisco_nxos": [f"interface {obj}", f"shut", f"no shut"],
+            "cisco_nxos": [f"interface {obj}", "shut", "no shut"],
             "arista_eos": [
                 f"interface {obj}",
-                f"shut",
-                f"no shut",
+                "shut",
+                "no shut",
             ],
         }
 
