@@ -1,7 +1,24 @@
+[MASTER]
+ignore=__pycache__,build,dist
+presistent=yes
+
 [MESSAGES CONTROL]
-disable=E0401, # Unable to import
-    C0114, # Missing module docstring
-    C0115, # Missing class docstring
-    C0116, # Missing function or method docstring
-    R0903, # Too few public methods
-    C0103  # Constant name doesn't conform to UPPER_CASE (invalid-name)
+disable=
+    # Unable to import
+    E0401,
+    # Missing module docstring
+    C0114,
+    # Missing class docstring
+    C0115,
+    # Missing function or method docstring
+    C0116,
+    # Too few public methods
+    R0903,
+    # Constant name doesn't conform to UPPER_CASE (invalid-name)
+    C0103
+
+[FORMAT]
+max-line-length=120
+indent-string='    '
+expected-line-ending-format=LF
+
