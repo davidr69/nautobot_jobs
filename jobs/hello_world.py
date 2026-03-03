@@ -16,7 +16,7 @@ name = "Examples"  # grouping in UI
 class HelloWorldJobs(Job):
     class Meta:
         name = "Hello World"  # job name
-        description = "Choose a better description"
+        description = "It's what you would expect!"
         has_sensitive_variables = False
         soft_time_limit = 1200
         time_limit = 2400
