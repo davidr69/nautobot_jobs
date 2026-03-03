@@ -66,4 +66,4 @@ class HelloJobsWithApproval(Job):
         )
 
 
-register_jobs(HelloWorldJobs, HelloWorldButtonReceiver, HelloJobsWithApproval)
+register_jobs(HelloWorldJob, HelloWorldButtonReceiver, HelloJobsWithApproval)
