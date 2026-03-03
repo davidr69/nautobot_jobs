@@ -16,10 +16,12 @@ name = "Examples"  # grouping in UI
 class HelloWorldJobs(Job):
     class Meta:
         name = "Hello World"  # job name
-        description = "Update this description"
+        description = "Choose a better description"
         has_sensitive_variables = False
         soft_time_limit = 120
         time_limit = 300
+        read_only = True
+        is_singleton = True
 
     who = StringVar(description="Identify yourself!", default="hola!")
 
