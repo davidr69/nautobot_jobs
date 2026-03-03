@@ -18,8 +18,8 @@ class HelloWorldJobs(Job):
         name = "Hello World"  # job name
         description = "Choose a better description"
         has_sensitive_variables = False
-        soft_time_limit = 450
-        time_limit = 750
+        soft_time_limit = 1200
+        time_limit = 2400
         read_only = True
         is_singleton = True
 
