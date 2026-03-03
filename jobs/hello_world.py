@@ -18,6 +18,8 @@ class HelloWorldJobs(Job):
         name = "Hello World"  # job name
         description = "Update this description"
         has_sensitive_variables = False
+        soft_time_limit = 300
+        time_limit = 600
 
     who = StringVar(description="Identify yourself!", default="hola!")
 
