@@ -13,13 +13,13 @@ from nautobot.dcim.models.devices import DeviceType
 name = "Examples"  # grouping in UI
 
 
-class HelloWorldJobs(Job):
+class HelloWorldJob(Job):
     class Meta:
         name = "Hello World"  # job name
         description = "It's what you would expect!"
         has_sensitive_variables = False
-        soft_time_limit = 800
-        time_limit = 1200
+        soft_time_limit = 900
+        time_limit = 1300
         read_only = True
         is_singleton = True
 
