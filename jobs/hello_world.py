@@ -43,6 +43,20 @@ class HelloWorldJob(Job):
             self.logger.info("Selected device type IDs: %s", devices)
 
 
+class Noop(Job):
+    class Meta:
+        name = "Noop"
+        description = "If you know, you know"
+        has_sensitive_variables = False
+        soft_time_limit = 1000
+        time_limit = 1300
+        read_only = True
+        is_singleton = True
+
+    def run(self):
+        self.logger.info("I do absolutely nothing!")
+
+
 class HelloWorldButtonReceiver(JobButtonReceiver):
     class Meta:
         name = "Hello World Button Receiver"
