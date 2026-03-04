@@ -80,4 +80,4 @@ class HelloJobsWithApproval(Job):
         )
 
 
-register_jobs(HelloWorldJob, HelloWorldButtonReceiver, HelloJobsWithApproval)
+register_jobs(HelloWorldJob, Noop, HelloWorldButtonReceiver, HelloJobsWithApproval)
