@@ -3,7 +3,7 @@ from nautobot.apps.jobs import (
     StringVar,
     register_jobs,
     JobButtonReceiver,
-    MultiChoiceVar,
+#    MultiChoiceVar,
     ObjectVar,
     TextVar,
     IntegerVar,
@@ -12,16 +12,16 @@ from nautobot.dcim.models.devices import DeviceType
 
 name = "Examples"  # grouping in UI
 
-# def get_device_types():
-# 	devices = DeviceType.objects.all()
-# 	return [(str(device.pk), str(device.manufacturer)) for device in devices]
 
-
-class HelloWorldJobs(Job):
+class HelloWorldJob(Job):
     class Meta:
         name = "Hello World"  # job name
-        description = "Update this description"
+        description = "It's what you would expect!"
         has_sensitive_variables = False
+        soft_time_limit = 1000
+        time_limit = 1300
+        read_only = True
+        is_singleton = True
 
     who = StringVar(description="Identify yourself!", default="hola!")
 
@@ -41,6 +41,20 @@ class HelloWorldJobs(Job):
             self.logger.info("Comment: %s", comment)
         if devices:
             self.logger.info("Selected device type IDs: %s", devices)
+
+
+class Noop(Job):
+    class Meta:
+        name = "Noop"
+        description = "If you know, you know"
+        has_sensitive_variables = False
+        soft_time_limit = 1000
+        time_limit = 1300
+        read_only = True
+        is_singleton = True
+
+    def run(self):
+        self.logger.info("I do absolutely nothing!")
 
 
 class HelloWorldButtonReceiver(JobButtonReceiver):
@@ -66,4 +80,4 @@ class HelloJobsWithApproval(Job):
         )
 
 
-register_jobs(HelloWorldJobs, HelloWorldButtonReceiver, HelloJobsWithApproval)
+register_jobs(HelloWorldJob, HelloWorldButtonReceiver, HelloJobsWithApproval)

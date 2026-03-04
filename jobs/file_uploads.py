@@ -10,21 +10,27 @@ class FileUpload(Job):
         name = "CSV File Upload"
         description = "Please select a CSV file for upload"
         has_sensitive_variables = False
+        is_singleton = True
+        soft_time_limit = 60
+        time_limit = 300
 
     file = FileVar(description="CSV File to upload")
 
     def run(self, file):
         contents = str(file.read())
         self.logger.info(f"File contents: {contents}")
-        self.logger.info(f"Job didn't crash!")
+        self.logger.info("Job didn't crash!")
 
         return "Great job!"
 
 
-class FileUpload_2(Job):
+class FileUpload2(Job):
     class Meta:
         name = "CSV File Upload and Process"
         description = "Please select a CSV file for upload"
+        is_singleton = True
+        soft_time_limit = 60
+        time_limit = 300
 
     file = FileVar(
         description="CSV File to upload",
@@ -63,4 +69,4 @@ class FileUpload_2(Job):
         return "Execution completed"
 
 
-register_jobs(FileUpload, FileUpload_2)
+register_jobs(FileUpload, FileUpload2)

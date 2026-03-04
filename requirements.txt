@@ -1,2 +1,4 @@
 black
-
+pylint
+pre-commit
+nautobot
