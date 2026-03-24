@@ -1,20 +1,27 @@
 locations:
   - name: "{{ site_name }}"
-    status__name: "Active"
-    location_type__name: "Site"
+    status:
+      name: "Active"
+    location_type:
+      name: "Site"
     devices:
       {% for hostname, ip in device_ips.items() %}
       - name: "{{ hostname }}"
-        device_type__model: "33609"
-        device_role__name: "router"
-        status__name: "Active"
+        device_type:
+          model: "33609"
+        role:
+          name: "router"
+        status:
+          name: "Active"
         primary_ip4: "!ref:{{ hostname }}_ip"
         interfaces:
           - name: "GigabitEthernet0/0"
             type: "1000base-t"
-            status__name: "Active"
+            status:
+              name: "Active"
             ip_addresses:
               - address: "{{ ip }}"
-                status__name: "Active"
+                status:
+                  name: "Active"
                 "!ref": "{{ hostname }}_ip"
       {% endfor %}
