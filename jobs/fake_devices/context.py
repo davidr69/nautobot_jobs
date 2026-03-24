@@ -2,8 +2,8 @@ import netaddr
 from nautobot_design_builder.context import Context
 
 class MyDesignContext(Context):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, job, **kwargs):
+        super().__init__(job, **kwargs)
         # Calculate IPs here so the YAML stays clean
         prefix = netaddr.IPNetwork(self.mgmt_prefix)
         self.device_ips = {
