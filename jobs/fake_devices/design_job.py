@@ -17,7 +17,7 @@ class MyDeviceDesign(DesignJob):
     #     super().__init__(*args, **kwargs)
     #     self.logger.info(f"Management prefix: {self.mgmt_prefix}")
 
-    def run(self):
-        self.logger.info(f"Management prefix: {self.mgmt_prefix}")
-
-register_jobs(MyDeviceDesign)
+#     def run(self):
+#         self.logger.info(f"Management prefix: {self.mgmt_prefix}")
+#
+# register_jobs(MyDeviceDesign)
