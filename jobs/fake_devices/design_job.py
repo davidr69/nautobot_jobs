@@ -12,12 +12,3 @@ class MyDeviceDesign(DesignJob):
         name = "Deploy Home Devices"
         design_file = "templates/design.yml.j2"
         context_class = MyDesignContext
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.logger.info(f"Management prefix: {self.mgmt_prefix}")
-
-#     def run(self):
-#         self.logger.info(f"Management prefix: {self.mgmt_prefix}")
-#
-register_jobs(MyDeviceDesign)
