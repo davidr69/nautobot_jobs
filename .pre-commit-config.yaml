@@ -10,13 +10,13 @@ repos:
   hooks:
   - id: black
     args: [--line-length=120]
-    files: ^*\.py$
+    files: ^.*\.py$
 - repo: https://github.com/pycqa/pylint
   rev: v3.2.6
   hooks:
   - id: pylint
     args: [--rcfile=.pylintrc]
-    files: ^*\.py$
+    files: ^.*\.py$
 #- repo: local
 #  hooks:
 #  - id: custom-rules

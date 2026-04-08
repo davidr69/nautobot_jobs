@@ -1,7 +1,9 @@
-from nautobot.apps.jobs import register_jobs, StringVar, ObjectVar
-from nautobot.dcim.models import Location
+from nautobot.apps.jobs import StringVar  # , register_jobs, ObjectVar
+
+# from nautobot.dcim.models import Location
 from nautobot_design_builder.design_job import DesignJob
 from .context import MyDesignContext
+
 
 class MyDeviceDesign(DesignJob):
     # Form fields in Nautobot UI
@@ -12,6 +14,3 @@ class MyDeviceDesign(DesignJob):
         name = "Deploy Home Devices"
         design_file = "templates/design.yml.j2"
         context_class = MyDesignContext
-
-    def run(self, *, dryrun=False, **kwargs):
-        pass

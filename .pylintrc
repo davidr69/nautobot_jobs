@@ -1,6 +1,6 @@
 [MASTER]
 ignore=__pycache__,build,dist
-presistent=yes
+persistent=yes
 
 [MESSAGES CONTROL]
 disable=
@@ -21,4 +21,3 @@ disable=
 max-line-length=120
 indent-string='    '
 expected-line-ending-format=LF
-
