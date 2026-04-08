@@ -3,7 +3,7 @@ locations:
     status:
       "!get:name": "Active"
     location_type:
-      "!get:name": "Site"
+      "!get:name": "home"
     devices:
       {% for hostname, ip in device_ips.items() %}
       - name: "{{ hostname }}"
