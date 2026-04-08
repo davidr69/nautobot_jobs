@@ -14,3 +14,6 @@ class MyDeviceDesign(DesignJob):
         name = "Deploy Home Devices"
         design_file = "templates/design.yml.j2"
         context_class = MyDesignContext
+
+    def run(self, context):
+        self.logger.info("Running design job.")

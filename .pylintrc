@@ -15,7 +15,9 @@ disable=
     # Too few public methods
     R0903,
     # Constant name doesn't conform to UPPER_CASE (invalid-name)
-    C0103
+    C0103,
+    # Unused argument
+    W0613
 
 [FORMAT]
 max-line-length=120
