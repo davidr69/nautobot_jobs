@@ -1,4 +1,4 @@
-from nautobot.apps.jobs import StringVar  # , register_jobs, ObjectVar
+from nautobot.apps.jobs import StringVar, register_jobs  # , ObjectVar
 
 # from nautobot.dcim.models import Location
 from nautobot_design_builder.design_job import DesignJob
@@ -15,5 +15,8 @@ class MyDeviceDesign(DesignJob):
         design_file = "templates/design.yml.j2"
         context_class = MyDesignContext
 
-    def run(self, context):
-        self.logger.info("Running design job.")
+    # def run(self, context):
+    #     self.logger.info("Running design job.")
+
+
+register_jobs(MyDeviceDesign)
