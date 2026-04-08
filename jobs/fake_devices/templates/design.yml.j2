@@ -1,7 +1,7 @@
 locations:
   - name: "{{ site_name }}"
     status:
-      name: "Active"
+      "!get:name": "Active"
     location_type:
       name: "Site"
     devices:
@@ -12,16 +12,16 @@ locations:
         role:
           name: "compressor"
         status:
-          name: "Active"
+          "!get:name": "Active"
         primary_ip4: "!ref:{{ hostname }}_ip"
         interfaces:
           - name: "GigabitEthernet0/0"
             type: "1000base-t"
             status:
-              name: "Active"
+              "!get:name": "Active"
             ip_addresses:
               - address: "{{ ip }}"
                 status:
-                  name: "Active"
+                  "!get:name": "Active"
                 "!ref": "{{ hostname }}_ip"
       {% endfor %}
