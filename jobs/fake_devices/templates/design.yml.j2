@@ -5,7 +5,7 @@ locations:
     location_type:
       "!get:name": "home"
     devices:
-      {% for hostname, ip in device_ips.items() %}
+      {% for hostname, ip in device_ips %}
       - name: "{{ hostname }}"
         device_type:
           "!get:model": "33609"
