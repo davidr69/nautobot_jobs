@@ -1,5 +1,7 @@
 locations:
   - name: "{{ site_name }}"
+    location_type:
+      "!get:name": "Site"
     status:
       "!get:name": "Active"
     devices:
