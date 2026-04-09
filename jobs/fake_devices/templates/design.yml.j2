@@ -1,21 +1,21 @@
 locations:
-  - "!get_or_create:name": "North America"
+  - "!get:name": "North America"
     location_type__name: "Region"
     status:
       "!get:name": "Active"
-  - "!get_or_create:name": "United States"
+  - "!get:name": "United States"
     location_type__name: "Country"
     parent:
       "!get:name": "North America"
     status:
       "!get:name": "Active"
-  - "!get_or_create:name": "State"
+  - "!get:name": "State"
     location_type__name: "State/Province"
     parent:
       "!get:name": "United States"
     status:
       "!get:name": "Active"
-  - "!get_or_create:name": "{{ site_name }}"
+  - "!get:name": "{{ site_name }}"
     location_type__name: "Site"
     parent:
       "!get:name": "State"
