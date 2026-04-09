@@ -1,27 +1,33 @@
 locations:
-  - name: "{{ site_name }}"
+  - name: "State"
     location_type:
-      "!get:name": "Site"
+      "!get:name": "State"
     status:
       "!get:name": "Active"
-    devices:
-      {% for hostname, ip in device_ips %}
-      - name: "{{ hostname }}"
-        device_type:
-          "!get:model": "33609"
-        role:
-          name: "compressor"
-        status:
-          "!get:name": "Active"
-        primary_ip4: "!ref:{{ hostname }}_ip"
-        interfaces:
-          - name: "GigabitEthernet0/0"
-            type: "1000base-t"
-            status:
-              "!get:name": "Active"
-            ip_addresses:
-              - address: "{{ ip }}"
-                status:
-                  "!get:name": "Active"
-                "!ref": "{{ hostname }}_ip"
-      {% endfor %}
+    locations:
+      - name: "{{ site_name }}"
+      location_type:
+        "!get:name": "Site"
+      status:
+        "!get:name": "Active"
+      devices:
+        {% for hostname, ip in device_ips %}
+        - name: "{{ hostname }}"
+          device_type:
+            "!get:model": "33609"
+          role:
+            name: "compressor"
+          status:
+            "!get:name": "Active"
+          primary_ip4: "!ref:{{ hostname }}_ip"
+          interfaces:
+            - name: "GigabitEthernet0/0"
+              type: "1000base-t"
+              status:
+                "!get:name": "Active"
+              ip_addresses:
+                - address: "{{ ip }}"
+                  status:
+                    "!get:name": "Active"
+                  "!ref": "{{ hostname }}_ip"
+        {% endfor %}
