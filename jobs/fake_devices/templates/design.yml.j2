@@ -2,8 +2,6 @@ locations:
   - name: "{{ site_name }}"
     status:
       "!get:name": "Active"
-    location_type:
-      "!get:name": "home"
     devices:
       {% for hostname, ip in device_ips %}
       - name: "{{ hostname }}"
