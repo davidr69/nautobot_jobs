@@ -1,20 +1,7 @@
 locations:
   - "!get:name": "North America"
-    location_type__name: "Region"
-    status:
-      "!get:name": "Active"
   - "!get:name": "United States"
-    location_type__name: "Country"
-    parent:
-      "!get:name": "North America"
-    status:
-      "!get:name": "Active"
-  - "!get:name": "State"
-    location_type__name: "State/Province"
-    parent:
-      "!get:name": "United States"
-    status:
-      "!get:name": "Active"
+  - "!get:name": "NY"
   - "!get:name": "{{ site_name }}"
     location_type__name: "Site"
     parent:
