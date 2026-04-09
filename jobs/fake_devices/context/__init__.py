@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from nautobot_design_builder.context import Context
 
-_DATA_FILE = Path(__file__).parent.parent / "data" / "device_ips.json"
+_DATA_FILE = Path(__file__).parent.parent / "data" / "fake_devices.yml"
 
 
 class MyDesignContext(Context):

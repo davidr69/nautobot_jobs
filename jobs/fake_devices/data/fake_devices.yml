@@ -1,0 +1,12 @@
+---
+  _metadata:
+    name: "my fake devices"
+    is_active: true
+    tags:
+      - site_name: "home"
+
+  device_ips:
+    - hostname: "compressor-01"
+      ip: "192.168.1.240/24"
+    - hostname: "compressor-02"
+      ip: "192.168.1.241/24"
