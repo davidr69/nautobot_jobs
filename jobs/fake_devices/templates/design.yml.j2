@@ -4,13 +4,14 @@ locations:
       "!get:name": "State"
     status:
       "!get:name": "Active"
-    Location:
-      - name: "{{ site_name }}"
-        location_type:
-          "!get:name": "Site"
-        status:
-          "!get:name": "Active"
-        devices:
+  - name: "{{ site_name }}"
+    location_type:
+      "!get:name": "Site"
+    parent:
+      "!get:name": "State"
+    status:
+      "!get:name": "Active"
+    devices:
           {% for hostname, ip in device_ips %}
           - name: "{{ hostname }}"
             device_type:
