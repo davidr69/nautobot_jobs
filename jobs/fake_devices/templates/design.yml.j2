@@ -1,12 +1,10 @@
 locations:
   - name: "State"
-    location_type:
-      "!get:name": "State"
+    location_type__name: "State"
     status:
       "!get:name": "Active"
   - name: "{{ site_name }}"
-    location_type:
-      "!get:name": "Site"
+    location_type__name: "Site"
     parent:
       "!get:name": "State"
     status:
