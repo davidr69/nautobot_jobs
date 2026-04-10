@@ -1,5 +1,5 @@
 locations:
-{% for hostname, device in devices %}
+{% for device in devices %}
   - name: "{{ device.region }}"
     location_type__name: "Region"
 
@@ -20,8 +20,8 @@ locations:
 {% endfor %}
 
 devices:
-{% for hostname, ip in devices %}
-  - name: "{{ hostname }}"
+{% for device in devices %}
+  - name: "{{ device.hostname }}"
     location:
       name: "{{ device.site }}"
     device_type:
@@ -30,15 +30,15 @@ devices:
       name: "compressor"
     status:
       "!get:name": "Active"
-    primary_ip4: "!ref:{{ hostname }}_ip"
+    primary_ip4: "!ref:{{ device.hostname }}_ip"
     interfaces:
       - name: "GigabitEthernet0/0"
         type: "1000base-t"
         status:
           "!get:name": "Active"
         ip_addresses:
-          - address: "{{ ip }}"
+          - address: "{{ device.ip }}"
             status:
               "!get:name": "Active"
-            "!ref": "{{ hostname }}_ip"
+            "!ref": "{{ device.hostname }}_ip"
 {% endfor %}

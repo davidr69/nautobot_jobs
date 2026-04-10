@@ -3,8 +3,6 @@
     name: "my fake devices"
     is_active: true
 
-  site_name: "home"
-
   devices:
     - hostname: "compressor-01"
       ip: "192.168.1.240/24"
