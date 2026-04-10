@@ -1,44 +1,44 @@
 locations:
-  - "!get:name": "North America"
+{% for hostname, device in devices.items() %}
+  - name: "{{ device.region }}"
     location_type__name: "Region"
-    status:
-      "!get:name": "Active"
-  - "!get:name": "United States"
+
+  - name: "{{ device.country }}"
     location_type__name: "Country"
     parent:
-      "!get:name": "North America"
-    status:
-      "!get:name": "Active"
-  - "!get:name": "NY"
+      name: "{{ device.region }}"
+
+  - name: "{{ device.state }}"
     location_type__name: "State/Province"
     parent:
-      "!get:name": "United States"
-    status:
-      "!get:name": "Active"
-  - "!get:name": "{{ site_name }}"
+      name: "{{ device.country }}"
+
+  - name: "{{ device.site }}"
     location_type__name: "Site"
     parent:
-      "!get:name": "State"
+      name: "{{ device.state }}"
+{% endfor %}
+
+devices:
+{% for hostname, ip in devices %}
+  - name: "{{ hostname }}"
+    location:
+      name: "{{ device.site }}"
+    device_type:
+      "!get:model": "33609"
+    role:
+      name: "compressor"
     status:
       "!get:name": "Active"
-    devices:
-          {% for hostname, ip in device_ips %}
-          - name: "{{ hostname }}"
-            device_type:
-              "!get:model": "33609"
-            role:
-              name: "compressor"
+    primary_ip4: "!ref:{{ hostname }}_ip"
+    interfaces:
+      - name: "GigabitEthernet0/0"
+        type: "1000base-t"
+        status:
+          "!get:name": "Active"
+        ip_addresses:
+          - address: "{{ ip }}"
             status:
               "!get:name": "Active"
-            primary_ip4: "!ref:{{ hostname }}_ip"
-            interfaces:
-              - name: "GigabitEthernet0/0"
-                type: "1000base-t"
-                status:
-                  "!get:name": "Active"
-                ip_addresses:
-                  - address: "{{ ip }}"
-                    status:
-                      "!get:name": "Active"
-                    "!ref": "{{ hostname }}_ip"
-          {% endfor %}
+            "!ref": "{{ hostname }}_ip"
+{% endfor %}
