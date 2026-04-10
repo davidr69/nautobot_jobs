@@ -20,8 +20,8 @@
 {#{% endfor %}#}
 
 roles:
-  - "!ref": compressor_role
-    name: "compressor"
+  - "!create_or_update:name": "compressor"
+    "!ref": "compressor_role"
 
 devices:
 {% for device in devices %}
@@ -30,8 +30,7 @@ devices:
       "!get:name": "{{ device.site }}"
     device_type:
       "!get:model": "33609"
-    role:
-      "!ref": compressor_role
+    role: "!ref:compressor_role"
     status:
       "!get:name": "Active"
     interfaces:
