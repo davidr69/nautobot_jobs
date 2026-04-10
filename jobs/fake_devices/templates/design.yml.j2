@@ -1,5 +1,5 @@
 locations:
-{% for hostname, device in devices.items() %}
+{% for hostname, device in devices %}
   - name: "{{ device.region }}"
     location_type__name: "Region"
 
