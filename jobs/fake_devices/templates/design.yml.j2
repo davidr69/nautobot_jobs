@@ -23,7 +23,7 @@ devices:
 {% for device in devices %}
   - name: "{{ device.hostname }}"
     location:
-      name: "{{ device.site }}"
+      "!get:name": "{{ device.site }}"
     device_type:
       "!get:model": "33609"
     role:
