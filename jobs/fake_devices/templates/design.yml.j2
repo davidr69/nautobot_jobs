@@ -22,7 +22,8 @@
 roles:
   - name: "compressor"
     content_types:
-      - "!get:app_label": "dcim,device"
+      - app_label: "dcim"
+        model: "device"
 
 devices:
 {% for device in devices %}
