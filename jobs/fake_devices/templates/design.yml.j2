@@ -30,7 +30,6 @@ devices:
       name: "compressor"
     status:
       "!get:name": "Active"
-    primary_ip4: "!ref:{{ device.hostname }}_ip"
     interfaces:
       - name: "GigabitEthernet0/0"
         type: "1000base-t"
@@ -41,4 +40,5 @@ devices:
             status:
               "!get:name": "Active"
             "!ref": "{{ device.hostname }}_ip"
+    primary_ip4: "!ref:{{ device.hostname }}_ip"
 {% endfor %}
