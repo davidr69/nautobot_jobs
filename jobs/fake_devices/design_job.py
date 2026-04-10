@@ -13,6 +13,7 @@ class MyDeviceDesign(DesignJob):
         name = "Deploy Home Devices"
         design_file = "templates/design.yml.j2"
         context_class = MyDesignContext
+        has_sensitive_variables = False
 
     def post_implementation(self, context, design_builder):
         for device_data in context.data["devices"]:
