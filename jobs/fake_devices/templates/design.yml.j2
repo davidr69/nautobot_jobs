@@ -20,10 +20,7 @@
 {#{% endfor %}#}
 
 roles:
-  - name: "compressor"
-    content_types:
-      - app_label: "dcim"
-        model: "device"
+  - "!get:name": "compressor"
 
 devices:
 {% for device in devices %}
