@@ -1,6 +1,7 @@
 ---
   _metadata:
     name: "my fake devices"
+    description: "Data for fake devices job"
     is_active: true
 
   devices:
