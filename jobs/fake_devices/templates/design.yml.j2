@@ -1,23 +1,23 @@
-locations:
-{% for device in devices %}
-  - name: "{{ device.region }}"
-    location_type__name: "Region"
-
-  - name: "{{ device.country }}"
-    location_type__name: "Country"
-    parent:
-      name: "{{ device.region }}"
-
-  - name: "{{ device.state }}"
-    location_type__name: "State/Province"
-    parent:
-      name: "{{ device.country }}"
-
-  - name: "{{ device.site }}"
-    location_type__name: "Site"
-    parent:
-      name: "{{ device.state }}"
-{% endfor %}
+{#locations:#}
+{#{% for device in devices %}#}
+{#  - name: "{{ device.region }}"#}
+{#    location_type__name: "Region"#}
+{##}
+{#  - name: "{{ device.country }}"#}
+{#    location_type__name: "Country"#}
+{#    parent:#}
+{#      name: "{{ device.region }}"#}
+{##}
+{#  - name: "{{ device.state }}"#}
+{#    location_type__name: "State/Province"#}
+{#    parent:#}
+{#      name: "{{ device.country }}"#}
+{##}
+{#  - name: "{{ device.site }}"#}
+{#    location_type__name: "Site"#}
+{#    parent:#}
+{#      name: "{{ device.state }}"#}
+{#{% endfor %}#}
 
 devices:
 {% for device in devices %}
