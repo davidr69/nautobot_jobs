@@ -39,6 +39,4 @@ devices:
           - address: "{{ device.ip }}"
             status:
               "!get:name": "Active"
-            "!ref": "{{ device.hostname }}_ip"
-    primary_ip4: "!ref:{{ device.hostname }}_ip"
 {% endfor %}
