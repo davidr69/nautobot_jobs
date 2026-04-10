@@ -27,7 +27,9 @@ devices:
     device_type:
       "!get:model": "33609"
     role:
-      "name": "compressor"
+      name: "compressor"
+      content_types:
+        - "!get:app_label,model": "dcim,device"
     status:
       "!get:name": "Active"
     interfaces:
