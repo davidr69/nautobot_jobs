@@ -22,10 +22,9 @@
 {#roles:#}
 {#  - "!get:name": "compressor"#}
 
-objects:
+dcim.device:
 {% for device in devices %}
-  - model: dcim.device
-    attributes:
+  - attributes:
       name: "{{ device.hostname }}"
       location:
         "name": "{{ device.site }}"
@@ -35,18 +34,22 @@ objects:
         "name": "compressor"
       status:
         "name": "Active"
+{% endfor %}
 
-  - model: dcim.interface
-    attributes:
+dcim.interface:
+{% for device in devices %}
+  - attributes:
       device:
         "name": "{{ device.hostname }}"
       name: "GigabitEthernet0/0"
       type: "1000base-t"
       status:
         "name": "Active"
+{% endfor %}
 
-  - model: ipam.ipaddress
-    attributes:
+ipam.ip_address:
+{% for device in devices %}
+  - attributes:
       address: "{{ device.ip }}"
       status:
         "name": "Active"
