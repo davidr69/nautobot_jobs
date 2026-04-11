@@ -24,22 +24,20 @@ roles:
 
 devices:
 {% for device in devices %}
-  - name: "{{ device.hostname }}"
-    location:
-      "!get:name": "{{ device.site }}"
-    device_type:
-      "!get:model": "33609"
-    role:
-      "!get:name": "compressor"
-    status:
-      "!get:name": "Active"
-    interfaces:
-      - name: "GigabitEthernet0/0"
-        type: "1000base-t"
-        status:
-          "!get:name": "Active"
-        ip_addresses:
-          - address: "{{ device.ip }}"
-            status:
-              "!get:name": "Active"
+  - model: dcim.device
+    attributes:
+      name: "{{ device.hostname }}"
+      status: {"name": "Active"}
+      role: {"name": "compressor"}
+      location: {"name": "{{ device.site }}"}
+      device_type: {"model": "33609"}
+      interfaces:
+        - name: "GigabitEthernet0/0"
+          type: "1000base-t"
+          status:
+            "!get:name": "Active"
+          ip_addresses:
+            - address: "{{ device.ip }}"
+              status:
+                "!get:name": "Active"
 {% endfor %}
