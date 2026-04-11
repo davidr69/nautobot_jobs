@@ -1,58 +1,36 @@
-{#locations:#}
-{#{% for device in devices %}#}
-{#  - name: "{{ device.region }}"#}
-{#    location_type__name: "Region"#}
-{##}
-{#  - name: "{{ device.country }}"#}
-{#    location_type__name: "Country"#}
-{#    parent:#}
-{#      name: "{{ device.region }}"#}
-{##}
-{#  - name: "{{ device.state }}"#}
-{#    location_type__name: "State/Province"#}
-{#    parent:#}
-{#      name: "{{ device.country }}"#}
-{##}
-{#  - name: "{{ device.site }}"#}
-{#    location_type__name: "Site"#}
-{#    parent:#}
-{#      name: "{{ device.state }}"#}
-{#{% endfor %}#}
+roles:
+  - name: "compressor"
 
-{#roles:#}
-{#  - "!get:name": "compressor"#}
-
-dcim.device:
+devices:
 {% for device in devices %}
-  - attributes:
+  - model: dcim.device
+    attributes:
       name: "{{ device.hostname }}"
       location:
-        "name": "{{ device.site }}"
+        name: "{{ device.site }}"
       device_type:
-        "model": "33609"
+        manufacturer:
+          name: "Cisco"
+        model: "CSR1000V"
       role:
-        "name": "compressor"
+        name: "compressor"
       status:
-        "name": "Active"
-{% endfor %}
+        name: "Active"
 
-dcim.interface:
-{% for device in devices %}
-  - attributes:
+  - model: dcim.interface
+    attributes:
       device:
-        "name": "{{ device.hostname }}"
+        name: "{{ device.hostname }}"
       name: "GigabitEthernet0/0"
       type: "1000base-t"
       status:
-        "name": "Active"
-{% endfor %}
+        name: "Active"
 
-ipam.ip_address:
-{% for device in devices %}
-  - attributes:
+  - model: ipam.ip_address
+    attributes:
       address: "{{ device.ip }}"
       status:
-        "name": "Active"
+        name: "Active"
       assigned_object_type: "dcim.interface"
       assigned_object:
         name: "GigabitEthernet0/0"
