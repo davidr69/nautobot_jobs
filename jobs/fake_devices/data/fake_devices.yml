@@ -1,0 +1,19 @@
+---
+  _metadata:
+    name: "my fake devices"
+    description: "Data for fake devices job"
+    is_active: true
+
+  devices:
+    - hostname: "compressor-01"
+      ip: "192.168.1.240/24"
+      region: "North America"
+      country: "United States"
+      state: "NY"
+      site: "home"
+    - hostname: "compressor-02"
+      ip: "192.168.1.241/24"
+      region: "North America"
+      country: "United States"
+      state: "NY"
+      site: "home"
