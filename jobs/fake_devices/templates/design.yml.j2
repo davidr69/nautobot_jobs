@@ -10,9 +10,8 @@ devices:
 {% for device in data.devices %}
   - "!create_or_update:name": "{{ device.hostname }}"
     location__name: "{{ device.site }}"
-    device_type:
-      manufacturer__name: "Neve"
-      model: "33609"
+    device_type__model: "33609"
+    device_type__manufacturer__name: "Neve"
     role__name: "compressor"
     status__name: "Active"
     interfaces:
