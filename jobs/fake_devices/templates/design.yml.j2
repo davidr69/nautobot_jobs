@@ -1,39 +1,26 @@
+---
 roles:
-  - name: "compressor"
+  - "!create_or_update:name": "compressor"
+    color: "9e9e9e"
+    content_types:
+      - "!get:app_label": "dcim"
+        "!get:model": "device"
 
 devices:
-{% for device in devices %}
-  - model: dcim.device
-    attributes:
-      name: "{{ device.hostname }}"
-      location:
-        name: "{{ device.site }}"
-      device_type:
-        manufacturer:
-          name: "Cisco"
-        model: "CSR1000V"
-      role:
-        name: "compressor"
-      status:
-        name: "Active"
-
-  - model: dcim.interface
-    attributes:
-      device:
-        name: "{{ device.hostname }}"
-      name: "GigabitEthernet0/0"
-      type: "1000base-t"
-      status:
-        name: "Active"
-
-  - model: ipam.ip_address
-    attributes:
-      address: "{{ device.ip }}"
-      status:
-        name: "Active"
-      assigned_object_type: "dcim.interface"
-      assigned_object:
-        name: "GigabitEthernet0/0"
-        device:
-          name: "{{ device.hostname }}"
+{% for device in data.devices %}
+  - "!create_or_update:name": "{{ device.hostname }}"
+    location__name: "{{ device.site }}"
+    device_type:
+      manufacturer__name: "Neve"
+      model: "33609"
+    role__name: "compressor"
+    status__name: "Active"
+    interfaces:
+      - name: "GigabitEthernet0/0"
+        type: "1000base-t"
+        status__name: "Active"
+        ip_address_assignments:
+          - ip_address:
+              "!create_or_update:address": "{{ device.ip }}"
+              status__name: "Active"
 {% endfor %}
