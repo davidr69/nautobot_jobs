@@ -10,6 +10,11 @@ class MyDeviceDesign(DesignJob):
     site_name = StringVar(default="home")
     mgmt_prefix = StringVar(default="192.168.1.0/24")
 
+    deployment_name = StringVar(
+        label = "Deployment Name",
+        required = True
+    )
+
     class Meta:
         name = "Deploy Home Devices"
         design_file = "templates/design.yml.j2"
