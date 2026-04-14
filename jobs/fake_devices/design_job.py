@@ -22,13 +22,13 @@ class MyDeviceDesign(DesignJob):
         has_sensitive_variables = False
         design_mode = DesignModeChoices.DEPLOYMENT
 
-    # def post_implementation(self, context, design_builder):
-    #     for device_data in context.data["devices"]:
-    #         device = Device.objects.get(name=device_data["hostname"])
-    #         ip = device.interfaces.get(name="GigabitEthernet0/0").ip_addresses.first()
-    #         if ip:
-    #             device.primary_ip4 = ip
-    #             device.save()
+    def post_implementation(self, context, design_builder):
+        for device_data in context.data["devices"]:
+            device = Device.objects.get(name=device_data["hostname"])
+            ip = device.interfaces.get(name="GigabitEthernet0/0").ip_addresses.first()
+            if ip:
+                device.primary_ip4 = ip
+                device.save()
 
 
 register_jobs(MyDeviceDesign)
