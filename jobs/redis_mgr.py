@@ -32,7 +32,9 @@ class GetRedisValues(Job):
                 response.append(key_str)
 
         response.sort()
-        self.logger.info(f"Result: {'\n'.join(response)}")
+        #        self.logger.info('\n'.join(response))
+        for key in response:
+            self.logger.info(key)
 
 
 register_jobs(GetRedisValues)
