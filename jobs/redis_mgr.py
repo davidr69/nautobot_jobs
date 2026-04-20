@@ -21,18 +21,18 @@ class GetRedisValues(Job):
 
         redis_client = get_redis_connection("default")
 
-        keys_list = keys.strip().split(",")
+        keys_list = keys.strip().split("\n")
         redis_keys = redis_client.keys("*")
 
-        response = {}
+        response = []
 
         for key in redis_keys:
             key_str = key.decode("utf-8")
             if any(part in key_str for part in keys_list):
-                value = redis_client.get(key).decode("utf-8")
-                response[key_str] = value
+                response.append(key_str)
 
-        self.logger.info(f"Result: {response}")
+        response.sort()
+        self.logger.info(f"Result: {'\n'.join(response)}")
 
 
 register_jobs(GetRedisValues)
