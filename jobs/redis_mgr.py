@@ -28,9 +28,10 @@ class GetRedisValues(Job):
 
         for key in redis_keys:
             key_str = key.decode("utf-8")
-            if any(part in key_str for part in keys_list):
-                response.append(key_str)
-                self.logger.info(f"Found key: {key_str}")
+            for search in keys_list:
+                if key_str.find(search) != -1:
+                    response.append(key_str)
+                    break
 
         response.sort()
         self.logger.info("\n".join(response))
