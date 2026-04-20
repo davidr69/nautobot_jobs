@@ -30,11 +30,10 @@ class GetRedisValues(Job):
             key_str = key.decode("utf-8")
             if any(part in key_str for part in keys_list):
                 response.append(key_str)
+                self.logger.info(f"Found key: {key_str}")
 
         response.sort()
-        #        self.logger.info('\n'.join(response))
-        for key in response:
-            self.logger.info(key)
+        self.logger.info("\n".join(response))
 
 
 register_jobs(GetRedisValues)
