@@ -17,8 +17,12 @@ class GetRedisValues(Job):
     keys = TextVar(description="Partial keys allowed", default="openapi_schema_cache")
 
     def run(self, keys):
+        barr = []
+        for b in keys:
+            barr.append("%02x " % ord(b))
         keys_list = keys.strip("\r").split("\n")
         self.logger.info(f"Keys list: {keys_list}")
+        self.logger.info(f"Hex dump: {''.join(barr)}")
 
         redis_client = get_redis_connection("default")
         redis_keys = redis_client.keys("*")
