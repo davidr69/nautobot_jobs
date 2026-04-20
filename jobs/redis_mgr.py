@@ -17,21 +17,19 @@ class GetRedisValues(Job):
     keys = TextVar(description="Partial keys allowed", default="openapi_schema_cache")
 
     def run(self, keys):
-        self.logger.info(f"You selected: {keys}")
+        keys_list = keys.strip().split("\n")
+        self.logger.info(f"Keys list: {keys_list}")
 
         redis_client = get_redis_connection("default")
-
-        keys_list = keys.strip().split("\n")
         redis_keys = redis_client.keys("*")
 
         response = []
 
         for key in redis_keys:
             key_str = key.decode("utf-8")
-            for search in keys_list:
-                if key_str.find(search) != -1:
-                    response.append(key_str)
-                    break
+            if any(part in key_str for part in keys_list):
+                response.append(key_str)
+                self.logger.info(f"Found key: {key_str}")
 
         response.sort()
         self.logger.info("\n".join(response))
