@@ -15,12 +15,8 @@ class GetRedisValues(Job):
 
     keys = TextVar(description="Partial keys allowed", default="openapi_schema_cache")
 
-    def run(self, *, who, age, comment, devices):
-        self.logger.info("Hello, %s! You are %s years old.", who, age)
-        if comment:
-            self.logger.info("Comment: %s", comment)
-        if devices:
-            self.logger.info("Selected device type IDs: %s", devices)
+    def run(self, keys):
+        self.logger.info(f"You selected: {keys}")
 
 
 register_jobs(GetRedisValues)
