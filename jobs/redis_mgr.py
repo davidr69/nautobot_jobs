@@ -31,7 +31,7 @@ class GetRedisValues(Job):
                 response.append(key_str)
 
         response.sort()
-        self.logger.info("\n".join(response))
+        self.logger.info('<pre>' + "\n".join(response) + '</pre>')
 
 
 register_jobs(GetRedisValues)
