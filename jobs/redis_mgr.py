@@ -32,7 +32,7 @@ class GetRedisKeys(Job):
             keys_list = keys.replace("\r", "").split("\n")
             self.logger.info(f"Keys list: {keys_list}")
 
-            for key in redis_keys:
+            for key in raw_keys:
                 if any(part in key for part in keys_list):
                     response.append(key)
 
