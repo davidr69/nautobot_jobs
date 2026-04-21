@@ -67,7 +67,7 @@ class DropRedisKeys(Job):
             self.logger.info(f"Keys list: {keys_list}")
 
         for key in raw_keys:
-            if keys == '*' or any(part in key for part in keys_list):
+            if keys == '*' or key in keys_list:
                 redis_client.delete(key)
                 self.logger.info(f"Deleted key: {key}")
 
