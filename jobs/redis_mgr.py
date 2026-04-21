@@ -53,11 +53,12 @@ class DropRedisKeys(Job):
     keys = TextVar(description='Partial keys allowed; enter "*" for all keys', required=True)
 
     def run(self, keys):
-        response = []
         keys_list = []
 
         redis_client = get_redis_connection("default")
         redis_keys = redis_client.keys("*")
+
+        raw_keys = [ re.sub(r"^:\d+:", "", key.decode("utf-8")) for key in redis_keys ]
 
         if keys == "*":
             self.logger.info("Dropping all keys")
@@ -65,13 +66,10 @@ class DropRedisKeys(Job):
             keys_list = keys.replace("\r", "").split("\n")
             self.logger.info(f"Keys list: {keys_list}")
 
-        for key in redis_keys:
-            key_str = key.decode("utf-8")
-            if keys == "*" or any(part in key_str for part in keys_list):
-                response.append(re.sub(r"^:\d+:", "", key_str))
-
-        self.logger.info('<pre>' + "\n".join(response) + '</pre>')
-
+        for key in raw_keys:
+            if keys == '*' or any(part in key for part in keys_list):
+                redis_client.delete(key)
+                self.logger.info(f"Deleted key: {key}")
 
 
 register_jobs(GetRedisKeys, DropRedisKeys)
