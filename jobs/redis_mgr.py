@@ -1,5 +1,6 @@
 from nautobot.apps.jobs import Job, register_jobs, TextVar
 from django_redis import get_redis_connection
+import re
 
 name = "Redis Management"
 
@@ -28,7 +29,7 @@ class GetRedisValues(Job):
         for key in redis_keys:
             key_str = key.decode("utf-8")
             if any(part in key_str for part in keys_list):
-                response.append(key_str)
+                response.append(re.sub(r"^:\d+:", "", key_str))
 
         response.sort()
         self.logger.info('<pre>' + "\n".join(response) + '</pre>')
