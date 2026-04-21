@@ -20,7 +20,7 @@ class GetRedisValues(Job):
         barr = []
         for b in keys:
             barr.append("%02x " % ord(b))
-        keys_list = keys.strip("\r").split("\n")
+        keys_list = keys.replace("\r", "").split("\n")
         self.logger.info(f"Keys list: {keys_list}")
         self.logger.info(f"Hex dump: {''.join(barr)}")
 
