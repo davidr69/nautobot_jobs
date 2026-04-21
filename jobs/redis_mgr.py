@@ -5,34 +5,73 @@ import re
 name = "Redis Management"
 
 
-class GetRedisValues(Job):
+class GetRedisKeys(Job):
     class Meta:
-        name = "Get Values"  # job name
-        description = "Get Values from Redis"
+        name = "Get Keys"  # job name
+        description = "Get Keys from Redis"
         has_sensitive_variables = False
         soft_time_limit = 60
         time_limit = 90
         read_only = True
         is_singleton = False
 
-    keys = TextVar(description="Partial keys allowed", default="openapi_schema_cache")
+    keys = TextVar(description='Partial keys allowed; enter "*" for all keys', default="openapi_schema_cache", required=True)
 
     def run(self, keys):
-        keys_list = keys.replace("\r", "").split("\n")
-        self.logger.info(f"Keys list: {keys_list}")
+        response = []
 
         redis_client = get_redis_connection("default")
         redis_keys = redis_client.keys("*")
 
-        response = []
+        raw_keys = [ re.sub(r"^:\d+:", "", key.decode("utf-8")) for key in redis_keys ]
 
-        for key in redis_keys:
-            key_str = key.decode("utf-8")
-            if any(part in key_str for part in keys_list):
-                response.append(re.sub(r"^:\d+:", "", key_str))
+        if keys == "*":
+            self.logger.info("Getting all keys")
+            response = raw_keys
+        else:
+            keys_list = keys.replace("\r", "").split("\n")
+            self.logger.info(f"Keys list: {keys_list}")
+
+            for key in redis_keys:
+                if any(part in key for part in keys_list):
+                    response.append(key)
 
         response.sort()
         self.logger.info('<pre>' + "\n".join(response) + '</pre>')
 
 
-register_jobs(GetRedisValues)
+class DropRedisKeys(Job):
+    class Meta:
+        name = "Drop Keys"  # job name
+        description = "Drop Keys from Redis"
+        has_sensitive_variables = False
+        soft_time_limit = 60
+        time_limit = 90
+        read_only = True
+        is_singleton = False
+
+    keys = TextVar(description='Partial keys allowed; enter "*" for all keys', required=True)
+
+    def run(self, keys):
+        response = []
+        keys_list = []
+
+        redis_client = get_redis_connection("default")
+        redis_keys = redis_client.keys("*")
+
+        if keys == "*":
+            self.logger.info("Dropping all keys")
+        else:
+            keys_list = keys.replace("\r", "").split("\n")
+            self.logger.info(f"Keys list: {keys_list}")
+
+        for key in redis_keys:
+            key_str = key.decode("utf-8")
+            if keys == "*" or any(part in key_str for part in keys_list):
+                response.append(re.sub(r"^:\d+:", "", key_str))
+
+        self.logger.info('<pre>' + "\n".join(response) + '</pre>')
+
+
+
+register_jobs(GetRedisKeys, DropRedisKeys)
