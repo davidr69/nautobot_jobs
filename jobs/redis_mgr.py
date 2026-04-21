@@ -1,6 +1,6 @@
 from nautobot.apps.jobs import Job, register_jobs, TextVar
 from django_redis import get_redis_connection
-import re
+
 
 name = "Redis Management"
 
@@ -23,7 +23,7 @@ class GetRedisKeys(Job):
         redis_client = get_redis_connection("default")
         redis_keys = redis_client.keys("*")
 
-        raw_keys = [ re.sub(r"^:\d+:", "", key.decode("utf-8")) for key in redis_keys ]
+        raw_keys = [ key.decode("utf-8") for key in redis_keys ]
 
         if keys == "*":
             self.logger.info("Getting all keys")
@@ -58,7 +58,7 @@ class DropRedisKeys(Job):
         redis_client = get_redis_connection("default")
         redis_keys = redis_client.keys("*")
 
-        raw_keys = [ re.sub(r"^:\d+:", "", key.decode("utf-8")) for key in redis_keys ]
+        raw_keys = [ key.decode("utf-8") for key in redis_keys ]
 
         if keys == "*":
             self.logger.info("Dropping all keys")
@@ -68,8 +68,10 @@ class DropRedisKeys(Job):
 
         for key in raw_keys:
             if keys == '*' or key in keys_list:
-                redis_client.delete(key)
-                self.logger.info(f"Deleted key: {key}")
+                if redis_client.delete(key) == 1:
+                    self.logger.info(f"Deleted key: {key}")
+                else:
+                    self.logger.info(f"Failed to delete key: {key}")
 
 
 register_jobs(GetRedisKeys, DropRedisKeys)
