@@ -47,10 +47,10 @@ class DropRedisKeys(Job):
         has_sensitive_variables = False
         soft_time_limit = 60
         time_limit = 90
-        read_only = True
+        read_only = False
         is_singleton = False
 
-    keys = TextVar(description='Partial keys allowed; enter "*" for all keys', required=True)
+    keys = TextVar(description='Exact keys required; enter "*" for all keys', required=True)
 
     def run(self, keys):
         keys_list = []
@@ -71,7 +71,9 @@ class DropRedisKeys(Job):
                 if redis_client.delete(key) == 1:
                     self.logger.info(f"Deleted key: {key}")
                 else:
-                    self.logger.info(f"Failed to delete key: {key}")
+                    self.logger.error(f"Failed to delete key: {key}")
+            else:
+                self.logger.error(f"Key not found: {key}")
 
 
 register_jobs(GetRedisKeys, DropRedisKeys)
