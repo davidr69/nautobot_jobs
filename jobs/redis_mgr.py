@@ -70,10 +70,11 @@ class DropRedisKeys(Job):
             if keys == '*' or key in keys_list:
                 if redis_client.delete(key) == 1:
                     self.logger.info(f"Deleted key: {key}")
+                    if keys != '*':
+                        keys_list.remove(key)
                 else:
                     self.logger.error(f"Failed to delete key: {key}")
-            else:
-                self.logger.error(f"Key not found: {key}")
 
+        self.logger.info(f"Remaining keys: {keys_list}")
 
 register_jobs(GetRedisKeys, DropRedisKeys)
