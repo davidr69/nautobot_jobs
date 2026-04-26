@@ -1,5 +1,5 @@
 # jobs/import_bind_zones.py
-from nautobot.core.jobs import Job, FileVar, BooleanVar
+from nautobot.core.jobs import Job, FileVar, BooleanVar, register_jobs
 from django.utils import timezone
 
 # Nautobot models
@@ -12,6 +12,8 @@ except Exception:
 	BindZone = None
 
 
+
+name = 'Bind Zone Import'
 # dns (dnspython) is imported inside parsing functions to avoid import-time failures
 
 class ImportBindZonesJob(Job):
@@ -145,3 +147,6 @@ class ImportBindZonesJob(Job):
 			"dry_run": dry_run,
 		}
 		self.logger.success(f"Import complete: {summary}")
+
+
+register_jobs(ImportBindZonesJob)
