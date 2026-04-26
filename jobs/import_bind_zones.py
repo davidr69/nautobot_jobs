@@ -12,8 +12,7 @@ except Exception:
 	BindZone = None
 
 
-import dns.zone
-import dns.name
+# dns (dnspython) is imported inside parsing functions to avoid import-time failures
 
 class ImportBindZonesJob(Job):
 	file = FileVar(
@@ -44,6 +43,15 @@ class ImportBindZonesJob(Job):
 		Each record: dict{origin,name,type,ttl,rdata}
 		"""
 		import re
+		try:
+			import dns
+		except ImportError:
+			# Provide a clear runtime error that will appear in Nautobot logs
+			self.logger.failure(
+				"dnspython is not installed in the Nautobot environment. Please `pip install dnspython` "
+				"or add it to your Nautobot environment requirements and restart Nautobot/Celery."
+			)
+			raise
 		ORIGIN_RE = re.compile(r"^\s*\$ORIGIN\s+([^\s;]+)", re.IGNORECASE | re.MULTILINE)
 
 		def split_zone_by_origin(text, default_origin=None):
@@ -72,7 +80,9 @@ class ImportBindZonesJob(Job):
 		for seg_origin, seg_text in segments:
 			try:
 				origin_name = dns.name.from_text(seg_origin) if seg_origin else None
-				zone = dns.zone.from_text(seg_text, origin=origin_name, relativize=False, allow_include=False, check_origin=False)
+				zone = dns.zone.from_text(
+					seg_text, origin=origin_name, relativize=False, allow_include=False, check_origin=False
+				)
 			except Exception:
 				# re-raise with context
 				raise
