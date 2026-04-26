@@ -1,12 +1,15 @@
 # jobs/import_bind_zones.py
 from nautobot.core.jobs import Job, FileVar, BooleanVar
-from nautobot.utilities.utils import render_jinja2
 from django.utils import timezone
 
 # Nautobot models
 from nautobot.dcim.models import DeviceType, Manufacturer
-# Optional plugin model to persist raw zone files:
-from nautobot_apps.bind.models import BindZone
+# Optional plugin model to persist raw zone files. Import defensively
+try:
+	# If you have a plugin that provides BindZone, import it; otherwise continue without persistence
+	from nautobot_apps.bind.models import BindZone  # type: ignore
+except Exception:
+	BindZone = None
 
 
 import dns.zone
@@ -37,23 +40,49 @@ class ImportBindZonesJob(Job):
 	def parse_zone_text(self, text, origin=None):
 		"""
 		Parse a zone file text with dnspython and return list of records.
-		Each record: dict{name,rtype,ttl,rdatastring}
+		Handles files that contain multiple $ORIGIN sections by splitting and parsing each segment.
+		Each record: dict{origin,name,type,ttl,rdata}
 		"""
-		records = []
-		# If origin not provided, dnspython requires an origin; try to rely on $ORIGIN in file or fallback
-		try:
-			zone = dns.zone.from_text(text, origin=origin, relativize=False, allow_include=False, check_origin=False)
-		except Exception as e:
-			# fallback: try with empty origin -> parse may still work
-			raise
+		import re
+		ORIGIN_RE = re.compile(r"^\s*\$ORIGIN\s+([^\s;]+)", re.IGNORECASE | re.MULTILINE)
 
-		for (name, node) in zone.nodes.items():
-			fqdn = name.to_text()
-			for rdataset in node.rdatasets:
-				rtype = dns.rdatatype.to_text(rdataset.rdtype)
-				ttl = rdataset.ttl
-				for rdata in rdataset:
-					records.append({"name": fqdn, "type": rtype, "ttl": ttl, "rdata": rdata.to_text()})
+		def split_zone_by_origin(text, default_origin=None):
+			matches = list(ORIGIN_RE.finditer(text))
+			parts = []
+			if not matches:
+				parts.append((default_origin, text))
+				return parts
+			# leading text before first $ORIGIN
+			first = matches[0]
+			if first.start() > 0:
+				leading = text[: first.start()].strip()
+				if leading:
+					parts.append((default_origin, leading))
+			for i, m in enumerate(matches):
+				origin_text = m.group(1).rstrip('.')
+				start = m.start()
+				end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+				zone_text = text[start:end].strip()
+				parts.append((origin_text, zone_text))
+			return parts
+
+		records = []
+		# split into origin segments
+		segments = split_zone_by_origin(text, default_origin=origin)
+		for seg_origin, seg_text in segments:
+			try:
+				origin_name = dns.name.from_text(seg_origin) if seg_origin else None
+				zone = dns.zone.from_text(seg_text, origin=origin_name, relativize=False, allow_include=False, check_origin=False)
+			except Exception:
+				# re-raise with context
+				raise
+			for (name, node) in zone.nodes.items():
+				fqdn = name.to_text()
+				for rdataset in node.rdatasets:
+					rtype = dns.rdatatype.to_text(rdataset.rdtype)
+					ttl = rdataset.ttl
+					for rdata in rdataset:
+						records.append({"origin": str(seg_origin), "name": fqdn, "type": rtype, "ttl": ttl, "rdata": rdata.to_text()})
 		return records
 
 	def ensure_device_type(self, manufacturer_name, model_name, commit):
