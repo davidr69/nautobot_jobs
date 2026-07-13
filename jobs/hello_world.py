@@ -1,18 +1,17 @@
-import random
-
 from nautobot.apps.jobs import (
     Job,
     StringVar,
     register_jobs,
     JobButtonReceiver,
-#    MultiChoiceVar,
+    #    MultiChoiceVar,
     ObjectVar,
     TextVar,
     IntegerVar,
 )
 from nautobot.dcim.models.devices import DeviceType
+from django_redis import get_redis_connection
 
-name = "Examples"  # grouping in UI
+name = "Examples"
 
 
 class HelloWorldJob(Job):
@@ -24,7 +23,6 @@ class HelloWorldJob(Job):
         time_limit = 900
         read_only = True
         is_singleton = True
-        max_retries = 3
 
     who = StringVar(description="Identify yourself!", default="hola!")
 
@@ -40,12 +38,19 @@ class HelloWorldJob(Job):
 
     def run(self, *, who, age, comment, devices):
         self.logger.info("Hello, %s! You are %s years old.", who, age)
+        redis_client = get_redis_connection("default")
+        self.logger.info(f"{self.natural_slug=}")
+        countdown = redis_client.get(f"{self.natural_slug}.countdown")
+        self.logger.info(f"countdown? {countdown}")
+
         if comment:
             self.logger.info("Comment: %s", comment)
         if devices:
             self.logger.info("Selected device type IDs: %s", devices)
-        if random.random() > 0.5:
-            raise SystemError("Forced error")
+
+    def on_failure(self, exc, task_id, args, kwargs):
+        self.logger.error("Job failed!")
+        self.logger.error(f"{exc=}, {task_id=}, {args=}, {kwargs=}")
 
 
 class Noop(Job):
@@ -80,9 +85,7 @@ class HelloJobsWithApproval(Job):
         has_sensitive_variables = False
 
     def run(self):
-        self.logger.debug(
-            "Hello, this is my first Nautobot Job that requires approval."
-        )
+        self.logger.debug("Hello, this is my first Nautobot Job that requires approval.")
 
 
 register_jobs(HelloWorldJob, Noop, HelloWorldButtonReceiver, HelloJobsWithApproval)
