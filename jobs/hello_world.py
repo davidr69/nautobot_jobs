@@ -1,3 +1,5 @@
+import random
+
 from nautobot.apps.jobs import (
     Job,
     StringVar,
@@ -22,6 +24,7 @@ class HelloWorldJob(Job):
         time_limit = 900
         read_only = True
         is_singleton = True
+        max_retries = 3
 
     who = StringVar(description="Identify yourself!", default="hola!")
 
@@ -41,6 +44,8 @@ class HelloWorldJob(Job):
             self.logger.info("Comment: %s", comment)
         if devices:
             self.logger.info("Selected device type IDs: %s", devices)
+        if random.random() > 0.5:
+            raise SystemError("Forced error")
 
 
 class Noop(Job):
