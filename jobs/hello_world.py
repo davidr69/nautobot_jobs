@@ -39,9 +39,9 @@ class HelloWorldJob(Job):
     def run(self, *, who, age, comment, devices):
         self.logger.info("Hello, %s! You are %s years old.", who, age)
         redis_client = get_redis_connection("default")
-        self.logger.info(f"{self.natural_slug=}")
-        countdown = redis_client.get(f"{self.natural_slug}.countdown")
-        self.logger.info(f"countdown? {countdown}")
+        self.logger.info(f"{self=}")
+        # countdown = redis_client.get(f"{self.natural_slug}.countdown")
+        # self.logger.info(f"countdown? {countdown}")
 
         if comment:
             self.logger.info("Comment: %s", comment)
