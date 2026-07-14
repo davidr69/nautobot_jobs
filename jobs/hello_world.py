@@ -75,7 +75,7 @@ class HelloWorldJob(Job):
                     return
 
                 num -= 1
-                redis_client.set(f"{job_name}.countdown", 600, num)
+                redis_client.set(f"{job_name}.countdown", num, ex=300)
 
                 task_name = getattr(current_task, "name", None) or getattr(self, "task_name", None)
                 if not task_name:
@@ -90,7 +90,7 @@ class HelloWorldJob(Job):
             except ValueError:
                 self.logger.error("Invalid countdown number!")
         else:
-            redis_client.set(f"{job_name}.countdown", 600, 0)
+            redis_client.set(f"{job_name}.countdown", 0, ex=300)
 
 
 class Noop(Job):
