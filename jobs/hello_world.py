@@ -90,7 +90,7 @@ class HelloWorldJob(Job):
             except ValueError:
                 self.logger.error("Invalid countdown number!")
         else:
-            redis_client.set(f"{job_name}.countdown", 0, ex=300)
+            redis_client.set(f"{job_name}.countdown", 3, ex=300)
 
 
 class Noop(Job):
