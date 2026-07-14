@@ -48,9 +48,9 @@ class HelloWorldJob(Job):
         if devices:
             self.logger.info("Selected device type IDs: %s", devices)
 
-    def on_failure(self, exc, task_id, args, kwargs):
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
         self.logger.error("Job failed!")
-        self.logger.error(f"{exc=}, {task_id=}, {args=}, {kwargs=}")
+        self.logger.error(f"{exc=}, {task_id=}, {args=}, {kwargs=}, {einfo=}")
 
 
 class Noop(Job):
