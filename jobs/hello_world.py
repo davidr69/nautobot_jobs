@@ -58,7 +58,7 @@ class HelloWorldJob(Job):
         if devices:
             self.logger.info("Selected device type IDs: %s", devices)
 
-    @auto_retry_on_failure(max_retries=4, delay_seconds=300)
+    @auto_retry_on_failure(max_retries=3, delay_seconds=60, redis_ttl_buffer=15)
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         """Handle job failures with automatic retry."""
         pass
