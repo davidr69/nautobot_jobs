@@ -76,21 +76,21 @@ class HelloWorldJob(Job):
 
                 num -= 1
                 redis_client.set(f"{job_name}.countdown", num, ex=300)
-
-                task_name = getattr(current_task, "name", None) or getattr(self, "task_name", None)
-                if not task_name:
-                    self.logger.error("Unable to determine Celery task name; cannot reschedule automatically.")
-                    return
-
-                args = args or []
-                kwargs = kwargs or {}
-
-                current_app.send_task(task_name, args=args, kwargs=kwargs, countdown=300)
-                self.log.info("Scheduled job")
             except ValueError:
                 self.logger.error("Invalid countdown number!")
         else:
             redis_client.set(f"{job_name}.countdown", 3, ex=300)
+
+        task_name = getattr(current_task, "name", None) or getattr(self, "task_name", None)
+        if not task_name:
+            self.logger.error("Unable to determine Celery task name; cannot reschedule automatically.")
+            return
+
+        args = args or []
+        kwargs = kwargs or {}
+
+        current_app.send_task(task_name, args=args, kwargs=kwargs, countdown=300)
+        self.log.info("Scheduled job")
 
 
 class Noop(Job):
