@@ -10,6 +10,9 @@ from nautobot.apps.jobs import (
     TextVar,
     IntegerVar,
 )
+
+from nautobot.extras.models.jobs import Job as JobModel
+from nautobot.users.models import User
 from nautobot.dcim.models.devices import DeviceType
 from django_redis import get_redis_connection
 
@@ -62,24 +65,25 @@ class HelloWorldJob(Job):
 
         redis_client = get_redis_connection("default")
         job_name = self.__class__.__name__
-        countdown = redis_client.get(f"{job_name}.countdown")
+        job_user = User.objects.get(username = self.user)
+        job_count = redis_client.get(f"{job_name}.countdown")
 
-        if countdown:
+        if job_count:
             try:
-                num = int(countdown)
+                num = int(job_count)
                 if num == 0:
                     redis_client.delete(f"{job_name}.countdown")
                     self.logger.error("Retries exhausted")
                     return
 
                 num -= 1
-                redis_client.set(f"{job_name}.countdown", num, ex=300)
+                redis_client.set(f"{job_name}.countdown", num, ex=330)
             except ValueError:
                 self.logger.error("Invalid countdown number!")
         else:
-            redis_client.set(f"{job_name}.countdown", 3, ex=300)
+            redis_client.set(f"{job_name}.countdown", 3, ex=330)
 
-        retry_job = Job.objects.get(name = HelloWorldJob.Meta.name)
+        retry_job = JobModel.objects.get(name = HelloWorldJob.Meta.name)
         if not retry_job:
             self.logger.error("Unable to determine Celery task name; cannot reschedule automatically.")
             return
@@ -87,8 +91,15 @@ class HelloWorldJob(Job):
         args = args or []
         kwargs = kwargs or {}
 
-        self.job_result.enqueue_job(retry_job, **kwargs, countdown=300)
-        self.logger.info("Scheduled job")
+        # FIX: Pass countdown in celery_kwargs, not as a direct keyword argument
+        # Celery's apply_async() expects scheduling parameters via celery_kwargs
+        self.job_result.enqueue_job(
+            retry_job,
+            user=job_user,
+            celery_kwargs={"countdown": 300},
+            **kwargs
+        )
+        self.logger.info("Scheduled job with 5-minute delay")
 
 
 class Noop(Job):
