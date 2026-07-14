@@ -40,7 +40,7 @@ class HelloWorldJob(Job):
         self.logger.info("Hello, %s! You are %s years old.", who, age)
         redis_client = get_redis_connection("default")
         countdown = redis_client.get(f"{self.job_model.slug}.countdown")
-        self.logger.info(f"countdown? {countdown}")ß
+        self.logger.info(f"countdown? {countdown}")
 
         if comment:
             self.logger.info("Comment: %s", comment)
