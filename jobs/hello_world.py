@@ -13,8 +13,6 @@ from nautobot.apps.jobs import (
 from nautobot.dcim.models.devices import DeviceType
 from django_redis import get_redis_connection
 
-from celery import current_app, current_task
-
 name = "Examples"
 
 
@@ -81,15 +79,15 @@ class HelloWorldJob(Job):
         else:
             redis_client.set(f"{job_name}.countdown", 3, ex=300)
 
-        task_name = getattr(current_task, "name", None) or getattr(self, "task_name", None)
-        if not task_name:
+        retry_job = Job.objects.get(name = HelloWorldJob.Meta.name)
+        if not retry_job:
             self.logger.error("Unable to determine Celery task name; cannot reschedule automatically.")
             return
 
         args = args or []
         kwargs = kwargs or {}
 
-        current_app.send_task(task_name, args=args, kwargs=kwargs, countdown=300)
+        self.job_result.enqueue_job(retry_job, **kwargs, countdown=300)
         self.logger.info("Scheduled job")
 
 
