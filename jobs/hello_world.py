@@ -90,7 +90,7 @@ class HelloWorldJob(Job):
         kwargs = kwargs or {}
 
         current_app.send_task(task_name, args=args, kwargs=kwargs, countdown=300)
-        self.log.info("Scheduled job")
+        self.logger.info("Scheduled job")
 
 
 class Noop(Job):
